@@ -23,14 +23,20 @@ public class LoginController {
 
 	@GetMapping
 	public ResponseEntity<String> login(@RequestParam("accessToken") String accessToken, @RequestParam("platform") SNSPlatform platform) {
-		int snsId = 0;
+		long snsId = 0;
+
+		System.out.println("accessToken = " + accessToken);
+		System.out.println("platform = " + platform);
 
 		if (platform.equals(SNSPlatform.KAKAO)) snsId = loginService.getIdFromKakao(accessToken);
+
+		System.out.println("snsId = " + snsId);
 
 		if (loginService.snsExists(snsId)) {
 			if (loginService.isNicknameNull(snsId)) return new ResponseEntity<>("No Nickname", HttpStatus.CREATED);
 			else return new ResponseEntity<>("User already exists", HttpStatus.OK);
 		}
+		loginService.insertUser(snsId);
 		return new ResponseEntity<>("New user", HttpStatus.CREATED);
 	}
 }
