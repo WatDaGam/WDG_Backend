@@ -25,12 +25,7 @@ public class LoginController {
 	public ResponseEntity<String> login(@RequestParam("accessToken") String accessToken, @RequestParam("platform") SNSPlatform platform) {
 		long snsId = 0;
 
-		System.out.println("accessToken = " + accessToken);
-		System.out.println("platform = " + platform);
-
 		if (platform.equals(SNSPlatform.KAKAO)) snsId = loginService.getIdFromKakao(accessToken);
-
-		System.out.println("snsId = " + snsId);
 
 		if (loginService.snsExists(snsId)) {
 			if (loginService.isNicknameNull(snsId)) return new ResponseEntity<>("No Nickname", HttpStatus.CREATED);
