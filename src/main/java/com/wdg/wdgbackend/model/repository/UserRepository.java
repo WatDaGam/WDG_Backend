@@ -3,8 +3,8 @@ package com.wdg.wdgbackend.model.repository;
 import com.wdg.wdgbackend.model.entity.User;
 
 public interface UserRepository {
-	boolean findSnsId(int snsId);
-	boolean isNicknameNull(int snsId);
+	boolean findSnsId(long snsId);
+	boolean isNicknameNull(long snsId);
 	void insertUser(User user);
 	Long findUserIdByNickname(String nickname);
 	void deactivateUserById(Long id);
