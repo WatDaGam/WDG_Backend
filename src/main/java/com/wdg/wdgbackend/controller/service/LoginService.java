@@ -1,0 +1,54 @@
+package com.wdg.wdgbackend.controller.service;
+
+import com.wdg.wdgbackend.model.entity.SNSPlatform;
+import com.wdg.wdgbackend.model.entity.User;
+import com.wdg.wdgbackend.model.repository.UserRepository;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
+public class LoginService {
+
+	private final UserRepository userRepository;
+
+	@Autowired
+	public LoginService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+
+	private HttpEntity<String> makeHttpEntity(String accessToken) {
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.set("Authorization", "Bearer " + accessToken);
+		 return new HttpEntity<>("parameters", httpHeaders);
+	}
+
+	private int getKakaoIdNum(HttpEntity<String> httpResponse) {
+		JSONObject jsonKakaoAccount = new JSONObject(httpResponse.getBody()).getJSONObject("kakao_account");
+		String kakaoId = jsonKakaoAccount.getString("id");
+		return Integer.parseInt(kakaoId);
+	}
+
+	public int getIdFromKakao(String accessToken) {
+		HttpEntity<String> httpEntityToKakao = makeHttpEntity(accessToken);
+
+		String kakaoApiUrl = "https://kapi.kakao.com/v2/user/me";
+		HttpEntity<String> httpResponse = new RestTemplate().exchange(kakaoApiUrl, HttpMethod.GET, httpEntityToKakao, String.class);
+
+		return getKakaoIdNum(httpResponse);
+	}
+
+	public boolean snsExists(int kakaoIdNum) {
+		return userRepository.findSnsId(kakaoIdNum);
+	}
+
+	public boolean isNicknameNull(int kakaoIdNum) {
+		return userRepository.isNicknameNull(kakaoIdNum);
+	}
+
+	public void insertUser(int kakaoIdNum) {
+		userRepository.insertUser(new User(0L, kakaoIdNum, SNSPlatform.KAKAO));
+	}
+}
