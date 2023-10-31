@@ -25,13 +25,15 @@ public class LoginService {
 		 return new HttpEntity<>("parameters", httpHeaders);
 	}
 
-	private int getKakaoIdNum(HttpEntity<String> httpResponse) {
-		JSONObject jsonKakaoAccount = new JSONObject(httpResponse.getBody()).getJSONObject("kakao_account");
-		String kakaoId = jsonKakaoAccount.getString("id");
-		return Integer.parseInt(kakaoId);
+	private long getKakaoIdNum(HttpEntity<String> httpResponse) {
+
+		JSONObject jsonKakaoAccount = new JSONObject(httpResponse.getBody());
+		long id = jsonKakaoAccount.getLong("id");
+		System.out.println("id = " + id);
+		return id;
 	}
 
-	public int getIdFromKakao(String accessToken) {
+	public long getIdFromKakao(String accessToken) {
 		HttpEntity<String> httpEntityToKakao = makeHttpEntity(accessToken);
 
 		String kakaoApiUrl = "https://kapi.kakao.com/v2/user/me";
@@ -40,15 +42,15 @@ public class LoginService {
 		return getKakaoIdNum(httpResponse);
 	}
 
-	public boolean snsExists(int kakaoIdNum) {
+	public boolean snsExists(long kakaoIdNum) {
 		return userRepository.findSnsId(kakaoIdNum);
 	}
 
-	public boolean isNicknameNull(int kakaoIdNum) {
+	public boolean isNicknameNull(long kakaoIdNum) {
 		return userRepository.isNicknameNull(kakaoIdNum);
 	}
 
-	public void insertUser(int kakaoIdNum) {
+	public void insertUser(long kakaoIdNum) {
 		userRepository.insertUser(new User(0L, kakaoIdNum, SNSPlatform.KAKAO));
 	}
 }

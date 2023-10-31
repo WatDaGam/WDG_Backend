@@ -16,12 +16,12 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public boolean findSnsId(int snsId) {
+	public boolean findSnsId(long snsId) {
 		return userMapper.checkSnsId(snsId) == 1;
 	}
 
 	@Override
-	public boolean isNicknameNull(int snsId) {
+	public boolean isNicknameNull(long snsId) {
 		return userMapper.checkNicknameIsNull(snsId) == 0;
 	}
 

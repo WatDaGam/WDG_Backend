@@ -7,13 +7,13 @@ import org.apache.ibatis.annotations.*;
 public interface UserMapper {
 
 	@Select("SELECT COUNT(*) FROM user WHERE sns_id = #{snsId}")
-	int checkSnsId(int snsId);
+	int checkSnsId(long snsId);
 
 	@Select("SELECT CASE WHEN nickname IS NULL THEN 0 ELSE 1 END FROM user WHERE sns_id = #{snsId}")
-	int checkNicknameIsNull(int snsId);
+	int checkNicknameIsNull(long snsId);
 
 	@Insert("INSERT INTO user (sns_id, sns_platform) " +
-			"VALUES (#{sns_id}, #{sns_platform})")
+			"VALUES (#{snsId}, #{sns})")
 	@Options(useGeneratedKeys = true, keyProperty = "id")
 	void insert(User user);
 
