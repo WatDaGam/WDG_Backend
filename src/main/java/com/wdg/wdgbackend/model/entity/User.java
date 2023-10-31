@@ -4,24 +4,31 @@ import java.sql.Timestamp;
 
 public class User {
 
+	private Long id;
 	private int snsId;
 	private String nickname;
 	private SNSPlatform sns;
-	private Timestamp createdAt;
 
-	public User(int snsId, String nickname, SNSPlatform sns, Timestamp createdAt) {
+	public User(Long id, int snsId, SNSPlatform sns) {
+		this.id = id;
 		this.snsId = snsId;
-		this.nickname = nickname;
 		this.sns = sns;
-		this.createdAt = createdAt;
 	}
 
-	public int getSnsID() {
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public int getSnsId() {
 		return snsId;
 	}
 
-	public void setSnsID(int snsID) {
-		this.snsId = snsID;
+	public void setSnsId(int snsId) {
+		this.snsId = snsId;
 	}
 
 	public String getNickname() {
@@ -38,13 +45,5 @@ public class User {
 
 	public void setSns(SNSPlatform sns) {
 		this.sns = sns;
-	}
-
-	public Timestamp getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
 	}
 }
