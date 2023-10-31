@@ -29,7 +29,6 @@ public class LoginService {
 
 		JSONObject jsonKakaoAccount = new JSONObject(httpResponse.getBody());
 		long id = jsonKakaoAccount.getLong("id");
-		System.out.println("id = " + id);
 		return id;
 	}
 
