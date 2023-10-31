@@ -5,10 +5,7 @@ import com.wdg.wdgbackend.model.entity.SNSPlatform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/login")
@@ -22,8 +19,9 @@ public class LoginController {
 	}
 
 	@GetMapping
-	public ResponseEntity<String> login(@RequestParam("accessToken") String accessToken, @RequestParam("platform") SNSPlatform platform) {
+	public ResponseEntity<String> login(@RequestHeader("Authorization") String authorizationHeader, @RequestParam("platform") SNSPlatform platform) {
 		long snsId = 0;
+		String accessToken = authorizationHeader.replace("Bearer ", "");
 
 		if (platform.equals(SNSPlatform.KAKAO)) snsId = loginService.getIdFromKakao(accessToken);
 
