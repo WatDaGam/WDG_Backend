@@ -20,6 +20,9 @@ public interface UserMapper {
 	@Select("SELECT id FROM user WHERE nickname = #{nickname}")
 	Long findUserIdByNickname(String nickname);
 
+	@Select("SELECT * FROM user WHERE sns_id = #{snsId}")
+	User findUserBySnsId(long snsId);
+
 	@Update("UPDATE user SET is_active = FALSE WHERE id = #{id}")
 	void deactivateUserById(Long id);
 
