@@ -1,9 +1,7 @@
 package com.wdg.wdgbackend.controller;
 
 import com.wdg.wdgbackend.controller.service.LoginService;
-import com.wdg.wdgbackend.controller.util.JwtUtil;
 import com.wdg.wdgbackend.model.entity.SNSPlatform;
-import com.wdg.wdgbackend.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +32,4 @@ public class LoginController {
 		if (loginService.alreadySignedIn(snsId)) return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
 		return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
 	}
-
-
 }
