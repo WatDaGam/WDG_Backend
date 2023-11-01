@@ -31,6 +31,11 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
+	public User findUserBySnsId(Long snsId) {
+		return userMapper.findUserBySnsId(snsId);
+	}
+
+	@Override
 	public Long findUserIdByNickname(String nickname) {
 		return userMapper.findUserIdByNickname(nickname);
 	}
