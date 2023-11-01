@@ -1,6 +1,5 @@
 package com.wdg.wdgbackend.controller.service;
 
-import com.wdg.wdgbackend.controller.util.JwtUtil;
 import com.wdg.wdgbackend.model.entity.SNSPlatform;
 import com.wdg.wdgbackend.model.entity.User;
 import com.wdg.wdgbackend.model.repository.UserRepository;
@@ -14,16 +13,18 @@ import org.springframework.web.client.RestTemplate;
 public class LoginService {
 
 	private final UserRepository userRepository;
+	private final JwtService jwtService;
 
 	@Autowired
-	public LoginService(UserRepository userRepository) {
+	public LoginService(UserRepository userRepository, JwtService jwtService) {
 		this.userRepository = userRepository;
+		this.jwtService = jwtService;
 	}
 
 	private HttpEntity<String> makeHttpEntity(String accessToken) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.set("Authorization", "Bearer " + accessToken);
-		 return new HttpEntity<>("parameters", httpHeaders);
+		return new HttpEntity<>("parameters", httpHeaders);
 	}
 
 	private long getKakaoIdNum(HttpEntity<String> httpResponse) {
@@ -56,8 +57,8 @@ public class LoginService {
 		User requestUser = findUserBySnsId(snsId);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add("Authorization", "Bearer " + JwtUtil.generateAccessToken(requestUser));
-		responseHeaders.add("Refresh-Token", JwtUtil.generateRefreshToken(requestUser));
+		responseHeaders.add("Authorization", "Bearer " + jwtService.generateAccessToken(requestUser));
+		responseHeaders.add("Refresh-Token", jwtService.generateRefreshToken(requestUser));
 		return responseHeaders;
 	}
 
