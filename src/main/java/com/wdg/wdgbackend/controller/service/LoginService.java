@@ -1,5 +1,6 @@
 package com.wdg.wdgbackend.controller.service;
 
+import com.wdg.wdgbackend.controller.util.JwtUtil;
 import com.wdg.wdgbackend.model.entity.SNSPlatform;
 import com.wdg.wdgbackend.model.entity.User;
 import com.wdg.wdgbackend.model.repository.UserRepository;
@@ -26,10 +27,8 @@ public class LoginService {
 	}
 
 	private long getKakaoIdNum(HttpEntity<String> httpResponse) {
-
 		JSONObject jsonKakaoAccount = new JSONObject(httpResponse.getBody());
-		long id = jsonKakaoAccount.getLong("id");
-		return id;
+		return jsonKakaoAccount.getLong("id");
 	}
 
 	public long getIdFromKakao(String accessToken) {
@@ -41,15 +40,32 @@ public class LoginService {
 		return getKakaoIdNum(httpResponse);
 	}
 
-	public boolean snsExists(long kakaoIdNum) {
-		return userRepository.findSnsId(kakaoIdNum);
+	public boolean snsExists(long snsId) {
+		return userRepository.findSnsId(snsId);
 	}
 
-	public boolean isNicknameNull(long kakaoIdNum) {
-		return userRepository.isNicknameNull(kakaoIdNum);
+	private boolean isNicknameNull(long snsId) {
+		return userRepository.isNicknameNull(snsId);
 	}
 
-	public void insertUser(long kakaoIdNum) {
-		userRepository.insertUser(new User(0L, kakaoIdNum, SNSPlatform.KAKAO));
+	public boolean alreadySignedIn(long snsId) {
+		return userRepository.findSnsId(snsId) && !userRepository.isNicknameNull(snsId);
+	}
+
+	public HttpHeaders getHttpHeaders(long snsId) {
+		User requestUser = findUserBySnsId(snsId);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add("Authorization", "Bearer " + JwtUtil.generateAccessToken(requestUser));
+		responseHeaders.add("Refresh-Token", JwtUtil.generateRefreshToken(requestUser));
+		return responseHeaders;
+	}
+
+	public void insertUser(long snsId) {
+		userRepository.insertUser(new User(0L, snsId, SNSPlatform.KAKAO));
+	}
+
+	private User findUserBySnsId(long snsId) {
+		return userRepository.findUserBySnsId(snsId);
 	}
 }
