@@ -19,10 +19,6 @@ import java.util.Optional;
 @Service
 public class JwtService {
 
-	private static final int HOUR = 60;
-	private static final long ACCESS_TOKEN_EXPIRY = 1000 * 60 * 10; // 10분
-	private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 24 * HOUR * 30; // 24시간 * 30 = 1달
-
 	private final UserRepository userRepository;
 	@Value("${jwt.secret-key}")
 	private String secretKeyProperty;
@@ -38,25 +34,25 @@ public class JwtService {
 		secretKey = new SecretKeySpec(secretKeyProperty.getBytes(), "HmacSHA256");
 	}
 
-	public String generateAccessToken(User user) {
+	public String generateAccessToken(User user, long expirationTime) {
 
 		return Jwts.builder()
 				.subject(String.valueOf(user.getSnsId()))
 				.claim("id", user.getId())
 				.claim("sns", user.getSns())
 				.claim("token-type", "access")
-				.expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY))
+				.expiration(new Date(expirationTime))
 				.signWith(secretKey)
 				.compact();
 	}
 
-	public String generateRefreshToken(User user) {
+	public String generateRefreshToken(User user, long expirationTime) {
 		return Jwts.builder()
 				.subject(String.valueOf(user.getSnsId()))
 				.claim("id", user.getId())
 				.claim("sns", user.getSns())
 				.claim("token-type", "refresh")
-				.expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRY))
+				.expiration(new Date(expirationTime))
 				.signWith(secretKey)
 				.compact();
 	}
