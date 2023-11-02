@@ -24,7 +24,12 @@ public class LoginController {
 		long snsId = 0;
 		String accessToken = authorizationHeader.replace("Bearer ", "");
 
-		if (platform.equals(SNSPlatform.KAKAO)) snsId = loginService.getIdFromKakao(accessToken);
+		try {
+			if (platform.equals(SNSPlatform.KAKAO)) snsId = loginService.getIdFromKakao(accessToken);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
 		if (!loginService.snsExists(snsId)) loginService.insertUser(snsId);
 
 		HttpHeaders responseHeaders = loginService.getHttpHeaders(snsId);
