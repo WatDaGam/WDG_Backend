@@ -16,7 +16,9 @@ import java.util.Optional;
 @RestController
 public class TokenController {
 
-    private JwtService jwtService;
+    private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 10; // 10분
+
+    private final JwtService jwtService;
 
     @Autowired
     public TokenController(JwtService jwtService) {
@@ -28,7 +30,9 @@ public class TokenController {
         Optional<User> requestUser = jwtService.validateToken(refreshToken);
         if (requestUser.isPresent()) {
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.add("Authorization", "Bearer " + jwtService.generateAccessToken(requestUser.get()));
+            long systemTime = System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY;
+            responseHeaders.add("Authorization", "Bearer " + jwtService.generateAccessToken(requestUser.get(), systemTime));
+            responseHeaders.add("access-expiration-time", String.valueOf(systemTime));
             return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Refresh token is invalid or expired", HttpStatus.UNAUTHORIZED);
