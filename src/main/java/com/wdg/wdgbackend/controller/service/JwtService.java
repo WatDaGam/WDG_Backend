@@ -12,13 +12,15 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class JwtService {
 
 	private static final int HOUR = 60;
-	private static final long ACCESS_TOKEN_EXPIRY = 1000 * 60 * 1; // 1분
+	private static final long ACCESS_TOKEN_EXPIRY = 1000 * 60 * 10; // 10분
 	private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 24 * HOUR * 30; // 24시간 * 30 = 1달
 
 	private final UserRepository userRepository;
@@ -57,6 +59,11 @@ public class JwtService {
 				.expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRY))
 				.signWith(secretKey)
 				.compact();
+	}
+
+	public Long getIdFromAccessToken(String accessToken) {
+		Claims claims = Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(accessToken).getPayload();
+		return Long.parseLong(claims.get("id").toString());
 	}
 
 	public Optional<User> validateToken(String token) {

@@ -62,11 +62,11 @@ public class LoginService {
 		return responseHeaders;
 	}
 
-	public void insertUser(long snsId) {
-		userRepository.insertUser(new User(0L, snsId, SNSPlatform.KAKAO));
-	}
-
 	private User findUserBySnsId(long snsId) {
 		return userRepository.findUserBySnsId(snsId);
+	}
+
+	public void insertUser(long snsId) {
+		userRepository.insertUser(new User(0L, snsId, SNSPlatform.KAKAO.ordinal()));
 	}
 }

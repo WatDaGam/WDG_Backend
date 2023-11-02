@@ -21,8 +21,18 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
+	public boolean isNicknameDup(String nickname) {
+		return userMapper.checkNicknameDup(nickname) == 1;
+	}
+
+	@Override
 	public boolean isNicknameNull(long snsId) {
 		return userMapper.checkNicknameIsNull(snsId) == 0;
+	}
+
+	@Override
+	public boolean isNicknameNullWithId(Long id) {
+		return userMapper.checkNicknameIsNullWithId(id) == 0;
 	}
 
 	@Override
@@ -38,6 +48,11 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public Long findUserIdByNickname(String nickname) {
 		return userMapper.findUserIdByNickname(nickname);
+	}
+
+	@Override
+	public void updateNicknameById(Long id, String nickname) {
+		userMapper.updateNicknameById(id, nickname);
 	}
 
 	@Override
