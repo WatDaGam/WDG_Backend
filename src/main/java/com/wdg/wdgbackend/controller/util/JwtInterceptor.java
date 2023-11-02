@@ -34,6 +34,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\":\"Unauthorized - Invalid Token\"}");
             return false;
         }
     }
