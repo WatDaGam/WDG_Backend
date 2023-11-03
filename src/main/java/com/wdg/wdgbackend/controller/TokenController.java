@@ -32,7 +32,7 @@ public class TokenController {
             HttpHeaders responseHeaders = new HttpHeaders();
             long systemTime = System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY;
             responseHeaders.add("Authorization", "Bearer " + jwtService.generateAccessToken(requestUser.get(), systemTime));
-            responseHeaders.add("access-expiration-time", String.valueOf(systemTime));
+            responseHeaders.add("Access-Expiration-Time", String.valueOf(systemTime));
             return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Refresh token is invalid or expired", HttpStatus.UNAUTHORIZED);

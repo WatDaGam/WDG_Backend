@@ -65,8 +65,8 @@ public class LoginService {
 		long refreshExpirationTime = System.currentTimeMillis() + REFRESH_TOKEN_EXPIRY;
 		responseHeaders.add("Authorization", "Bearer " + jwtService.generateAccessToken(requestUser, accessExpirationTime));
 		responseHeaders.add("Refresh-Token", jwtService.generateRefreshToken(requestUser, refreshExpirationTime));
-		responseHeaders.add("access-expiration-time", String.valueOf(accessExpirationTime));
-		responseHeaders.add("refresh-expiration-time", String.valueOf(refreshExpirationTime));
+		responseHeaders.add("Access-Expiration-Time", String.valueOf(accessExpirationTime));
+		responseHeaders.add("Refresh-Expiration-Time", String.valueOf(refreshExpirationTime));
 		return responseHeaders;
 	}
 

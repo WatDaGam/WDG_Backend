@@ -5,12 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GetoutService {
+public class WithdrawalService {
 
 	private final UserRepository userRepository;
 
 	@Autowired
-	public GetoutService(UserRepository userRepository) {
+	public WithdrawalService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
