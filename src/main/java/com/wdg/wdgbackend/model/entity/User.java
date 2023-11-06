@@ -9,12 +9,30 @@ public class User {
 	private Integer sns;
 	private String nickname;
 	private Timestamp createdAt;
+	private int storyNum;
+	private int likeNum;
 	private Boolean isActive;
 
 	public User(Long id, Long snsId, Integer sns) {
 		this.id = id;
 		this.snsId = snsId;
 		this.sns = sns;
+	}
+
+	public int getStoryNum() {
+		return storyNum;
+	}
+
+	public void setStoryNum(int storyNum) {
+		this.storyNum = storyNum;
+	}
+
+	public int getLikeNum() {
+		return likeNum;
+	}
+
+	public void setLikeNum(int likeNum) {
+		this.likeNum = likeNum;
 	}
 
 	public Timestamp getCreatedAt() {
