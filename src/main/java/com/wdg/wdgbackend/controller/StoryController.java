@@ -16,23 +16,26 @@ import java.io.IOException;
 public class StoryController {
 
 	private final StoryService storyService;
-	private final TokenService tokenService;
 
 	@Autowired
-	public StoryController(StoryService storyService, TokenService tokenService) {
+	public StoryController(StoryService storyService) {
 		this.storyService = storyService;
-		this.tokenService = tokenService;
 	}
 
 	@PostMapping("/upload")
 	public ResponseEntity<String> upload(@RequestHeader("Authorization") String authorizationHeader, @RequestBody String jsonData) {
-		Long idFromAccessToken = tokenService.getIdFromAccessToken(authorizationHeader);
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			storyService.insertNewStory(idFromAccessToken, objectMapper.readTree(jsonData));
+			storyService.insertNewStory(authorizationHeader, objectMapper.readTree(jsonData));
 		} catch (IOException e) {
 			return new ResponseEntity<>("Invalid story", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>("Story uploaded successfully", HttpStatus.OK);
+	}
+
+	@GetMapping("/info")
+	public ResponseEntity<String> info(@RequestParam("id") String storyId) {
+		String storyInfoJSON = storyService.makeStoryJSONObject(Long.parseLong(storyId));
+		return new ResponseEntity<>(storyInfoJSON, HttpStatus.OK);
 	}
 }

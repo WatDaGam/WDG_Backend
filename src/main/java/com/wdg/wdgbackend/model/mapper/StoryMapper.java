@@ -5,10 +5,11 @@ import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface StoryMapper {
-	@Insert("INSERT INTO story (userId, content, lati, longi) " +
-			"VALUES (#{userId}, #{content}, #{lati}, #{longi})")
+	@Insert("INSERT INTO story (userId, nickname, content, lati, longi) " +
+			"VALUES (#{userId}, #{nickname}, #{content}, #{lati}, #{longi})")
 	@Options(useGeneratedKeys = true, keyProperty = "id")
 	void insert(Story story);
 
-
+	@Select("SELECT * from story WHERE id = #{id}")
+	Story getStory(Long id);
 }
