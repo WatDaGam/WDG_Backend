@@ -52,8 +52,8 @@ public class StoryController {
 	}
 
 	@DeleteMapping("/delete")
-	public ResponseEntity<String> delete(@RequestParam("storyId") String storyId) {
-		storyService.deleteStory(Long.parseLong(storyId));
+	public ResponseEntity<String> delete(@RequestHeader("Authorization") String authorizationHeader, @RequestParam("storyId") String storyId) {
+		storyService.deleteStory(authorizationHeader, storyId);
 		return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
 	}
 }
