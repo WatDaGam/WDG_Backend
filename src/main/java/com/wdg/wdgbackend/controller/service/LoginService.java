@@ -12,8 +12,8 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class LoginService {
 
-	private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60; // 1분
-	private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 2; // 2분
+	private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 10; // 10분
+	private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 20; // 20분
 
 	private final UserRepository userRepository;
 	private final TokenService tokenService;
