@@ -10,6 +10,9 @@ public interface StoryMapper {
 	@Options(useGeneratedKeys = true, keyProperty = "id")
 	void insert(Story story);
 
-	@Select("SELECT * from story WHERE id = #{id}")
-	Story getStory(Long id);
+	@Select("SELECT * from story WHERE id = #{storyId}")
+	Story getStory(Long storyId);
+
+	@Delete("DELETE FROM story WHERE id = #{storyId}")
+	void delete(Long storyId);
 }

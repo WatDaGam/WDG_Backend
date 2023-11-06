@@ -22,7 +22,14 @@ public class StoryRepositoryImpl implements StoryRepository{
 	}
 
 	@Override
-	public Story getStory(Long id) {
-		return storyMapper.getStory(id);
+	public Story getStory(Long storyId) {
+		return storyMapper.getStory(storyId);
 	}
+
+	@Override
+	public void deleteStory(Long storyId) {
+		storyMapper.delete(storyId);
+	}
+
+
 }
