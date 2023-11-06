@@ -20,6 +20,11 @@ public interface UserMapper {
 
 	@Insert("INSERT INTO user (sns_id, sns_platform) " +
 			"VALUES (#{snsId}, #{sns})")
+	@Results({
+			@Result(property = "id", column = "id"),
+			@Result(property = "snsId", column = "sns_id"),
+			@Result(property = "sns", column = "sns_platform")
+	})
 	@Options(useGeneratedKeys = true, keyProperty = "id")
 	void insert(User user);
 
