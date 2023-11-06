@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 public class NicknameService {
 
 	private final UserRepository userRepository;
-	private final JwtService jwtService;
+	private final TokenService tokenService;
 
 	@Autowired
-	public NicknameService(UserRepository userRepository, JwtService jwtService) {
+	public NicknameService(UserRepository userRepository, TokenService tokenService) {
 		this.userRepository = userRepository;
-		this.jwtService = jwtService;
+		this.tokenService = tokenService;
 	}
 
 	public boolean isNicknameDuplicated(String nickname) {

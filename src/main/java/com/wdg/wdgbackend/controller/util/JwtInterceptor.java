@@ -1,6 +1,6 @@
 package com.wdg.wdgbackend.controller.util;
 
-import com.wdg.wdgbackend.controller.service.JwtService;
+import com.wdg.wdgbackend.controller.service.TokenService;
 import com.wdg.wdgbackend.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,11 +13,11 @@ import java.util.Optional;
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
 
-    private final JwtService jwtService;
+    private final TokenService tokenService;
 
     @Autowired
-    public JwtInterceptor(JwtService jwtService) {
-        this.jwtService = jwtService;
+    public JwtInterceptor(TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         if(header != null && header.startsWith("Bearer ")) {
             token = header.substring(7);
         }
-        Optional<User> user = jwtService.validateToken(token);
+        Optional<User> user = tokenService.validateToken(token);
 
         if (user.isPresent()) {
             return true;

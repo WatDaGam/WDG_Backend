@@ -1,28 +1,29 @@
 package com.wdg.wdgbackend.controller;
 
+import com.wdg.wdgbackend.controller.service.TokenService;
 import com.wdg.wdgbackend.controller.service.WithdrawalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/withdrawal")
 public class WithdrawalController {
 
-	private final WithdrawalService getoutService;
+	private final WithdrawalService withdrawalService;
+	private final TokenService tokenService;
 
 	@Autowired
-	public WithdrawalController(WithdrawalService getoutService) {
-		this.getoutService = getoutService;
+	public WithdrawalController(WithdrawalService withdrawalService, TokenService tokenService) {
+		this.withdrawalService = withdrawalService;
+		this.tokenService = tokenService;
 	}
 
 	@DeleteMapping
-	public ResponseEntity<String> getout(@RequestParam("nickname") String nickname) {
-		getoutService.deleteUser(nickname);
+	public ResponseEntity<String> getout(@RequestHeader("Authorization") String authorizationHeader) {
+		Long idFromAccessToken = tokenService.getIdFromAccessToken(authorizationHeader);
+		withdrawalService.deleteUser(idFromAccessToken);
 		return new ResponseEntity<>("Deleted", HttpStatus.OK);
 	}
 }

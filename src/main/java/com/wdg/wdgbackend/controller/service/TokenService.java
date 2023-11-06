@@ -12,12 +12,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class JwtService {
+public class TokenService {
 
 	private final UserRepository userRepository;
 	@Value("${jwt.secret-key}")
@@ -25,7 +23,7 @@ public class JwtService {
 	private static Key secretKey;
 
 	@Autowired
-	public JwtService(UserRepository userRepository) {
+	public TokenService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
@@ -57,7 +55,8 @@ public class JwtService {
 				.compact();
 	}
 
-	public Long getIdFromAccessToken(String accessToken) {
+	public Long getIdFromAccessToken(String authorizationHeader) {
+		String accessToken = authorizationHeader.replace("Bearer ", "");
 		Claims claims = Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(accessToken).getPayload();
 		return Long.parseLong(claims.get("id").toString());
 	}
