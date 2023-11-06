@@ -22,6 +22,21 @@ public class StoryRepositoryImpl implements StoryRepository{
 	}
 
 	@Override
+	public void likePlus(Long storyId) {
+		storyMapper.likePlus(storyId);
+	}
+
+	@Override
+	public void likeMinus(Long storyId) {
+		storyMapper.likeMinus(storyId);
+	}
+
+	@Override
+	public void lockStory(Long storyId) {
+		storyMapper.lockStory(storyId);
+	}
+
+	@Override
 	public Story getStory(Long storyId) {
 		return storyMapper.getStory(storyId);
 	}

@@ -33,6 +33,18 @@ public class StoryController {
 		return new ResponseEntity<>("Story uploaded successfully", HttpStatus.OK);
 	}
 
+	@PostMapping("/likePlus")
+	public ResponseEntity<String> likePlus(@RequestParam("storyId") String storyId) {
+		storyService.likePlus(Long.parseLong(storyId));
+		return new ResponseEntity<>("Like Plus", HttpStatus.OK);
+	}
+
+	@PostMapping("/likeMinus")
+	public ResponseEntity<String> likeMinus(@RequestParam("storyId") String storyId) {
+		storyService.likeMinus(Long.parseLong(storyId));
+		return new ResponseEntity<>("Like Minus", HttpStatus.OK);
+	}
+
 	@GetMapping("/info")
 	public ResponseEntity<String> info(@RequestParam("storyId") String storyId) {
 		String storyInfoJSON = storyService.makeStoryJSONObject(Long.parseLong(storyId));

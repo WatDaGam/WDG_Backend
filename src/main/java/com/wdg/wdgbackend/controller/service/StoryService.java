@@ -8,6 +8,7 @@ import com.wdg.wdgbackend.model.repository.StoryRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StoryService {
@@ -29,6 +30,18 @@ public class StoryService {
 		double longi = rootNode.get("longi").asDouble();
 
 		storyRepository.insertStory(new Story(0L, userId, nickname, story, 0, lati, longi));
+	}
+
+	@Transactional
+	public void likePlus(Long storyId) {
+		storyRepository.lockStory(storyId);
+		storyRepository.likePlus(storyId);
+	}
+
+	@Transactional
+	public void likeMinus(Long storyId) {
+		storyRepository.lockStory(storyId);
+		storyRepository.likeMinus(storyId);
 	}
 
 	public String makeStoryJSONObject(Long storyId) {
