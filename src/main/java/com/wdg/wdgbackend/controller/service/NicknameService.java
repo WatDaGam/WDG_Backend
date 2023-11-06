@@ -8,19 +8,17 @@ import org.springframework.stereotype.Service;
 public class NicknameService {
 
 	private final UserRepository userRepository;
-	private final TokenService tokenService;
 
 	@Autowired
-	public NicknameService(UserRepository userRepository, TokenService tokenService) {
+	public NicknameService(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.tokenService = tokenService;
 	}
 
 	public boolean isNicknameDuplicated(String nickname) {
 		return userRepository.isNicknameDup(nickname);
 	}
 
-	public void setNickname(Long id, String nickname) {
-		userRepository.updateNicknameById(id, nickname);
+	public void setNickname(Long userId, String nickname) {
+		userRepository.updateNicknameById(userId, nickname);
 	}
 }

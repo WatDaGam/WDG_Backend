@@ -6,17 +6,17 @@ public class User {
 
 	private Long id;
 	private Long snsId;
-	private Integer sns;
+	private Integer platform;
 	private String nickname;
 	private Timestamp createdAt;
 	private int storyNum;
 	private int likeNum;
 	private Boolean isActive;
 
-	public User(Long id, Long snsId, Integer sns) {
+	public User(Long id, Long snsId, Integer platform) {
 		this.id = id;
 		this.snsId = snsId;
-		this.sns = sns;
+		this.platform = platform;
 	}
 
 	public int getStoryNum() {
@@ -75,11 +75,11 @@ public class User {
 		this.nickname = nickname;
 	}
 
-	public Integer getSns() {
-		return sns;
+	public Integer getPlatform() {
+		return platform;
 	}
 
-	public void setSns(Integer sns) {
-		this.sns = sns;
+	public void setPlatform(Integer platform) {
+		this.platform = platform;
 	}
 }

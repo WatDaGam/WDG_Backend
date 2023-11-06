@@ -22,8 +22,8 @@ public class WithdrawalController {
 
 	@DeleteMapping
 	public ResponseEntity<String> getout(@RequestHeader("Authorization") String authorizationHeader) {
-		Long idFromAccessToken = tokenService.getIdFromAccessToken(authorizationHeader);
-		withdrawalService.deleteUser(idFromAccessToken);
+		Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+		withdrawalService.deleteUser(userId);
 		return new ResponseEntity<>("Deleted", HttpStatus.OK);
 	}
 }

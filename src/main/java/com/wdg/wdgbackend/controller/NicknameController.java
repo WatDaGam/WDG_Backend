@@ -28,9 +28,9 @@ public class NicknameController {
 
 	@PostMapping("/set")
 	public ResponseEntity<String> setNickname(@RequestBody String nickname, @RequestHeader("Authorization") String authorizationHeader) {
-		Long idFromAccessToken = tokenService.getIdFromAccessToken(authorizationHeader);
+		Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
 		if (nicknameService.isNicknameDuplicated(nickname)) return new ResponseEntity<>("duplicated", HttpStatus.OK);
-		nicknameService.setNickname(idFromAccessToken, nickname);
+		nicknameService.setNickname(userId, nickname);
 		return new ResponseEntity<>("ok", HttpStatus.OK);
 	}
 }
