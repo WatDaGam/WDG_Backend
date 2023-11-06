@@ -38,9 +38,19 @@ public interface UserMapper {
 	@Update("UPDATE user SET storyNum = storyNum - 1 WHERE id = #{userId}")
 	void decrementStoryNum(Long userId);
 
+	@Update("UPDATE user SET likeNum = likeNum + 1 WHERE id = #{userId}")
+	void incrementLikeNum(Long userId);
+
+	@Update("UPDATE user SET likeNum = likeNum - 1 WHERE id = #{userId}")
+	void decrementLikeNum(Long userId);
+
+	@Select("SELECT likeNum FROM user WHERE id = #{userId} FOR UPDATE")
+	Integer lockUserLikeNum(Long userId);
+
 	@Update("UPDATE user SET isActive = FALSE WHERE id = #{userId}")
 	void deactivateUserById(Long userId);
 
 	@Delete("DELETE FROM user WHERE id = #{userId}")
 	void deleteUserById(Long userId);
+
 }

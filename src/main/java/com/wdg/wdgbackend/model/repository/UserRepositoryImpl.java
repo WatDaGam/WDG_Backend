@@ -61,6 +61,21 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
+	public void incrementLikeNum(Long userId) {
+		userMapper.incrementLikeNum(userId);
+	}
+
+	@Override
+	public void decrementLikeNum(Long userId) {
+		userMapper.decrementLikeNum(userId);
+	}
+
+	@Override
+	public Integer lockUserLikeNum(Long userId) {
+		return userMapper.lockUserLikeNum(userId);
+	}
+
+	@Override
 	public void updateNicknameById(Long userId, String nickname) {
 		userMapper.updateNicknameById(userId, nickname);
 	}
