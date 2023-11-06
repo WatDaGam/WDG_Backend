@@ -14,7 +14,7 @@ public class WithdrawalService {
 		this.userRepository = userRepository;
 	}
 
-	public void deleteUser(Long id) {
-		userRepository.deleteUserById(id);
+	public void deleteUser(Long userId) {
+		userRepository.deleteUserById(userId);
 	}
 }
