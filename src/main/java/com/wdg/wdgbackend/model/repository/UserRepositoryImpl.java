@@ -51,6 +51,11 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
+	public void incrementStoryNum(Long userId) {
+		userMapper.incrementStoryNum(userId);
+	}
+
+	@Override
 	public void updateNicknameById(Long id, String nickname) {
 		userMapper.updateNicknameById(id, nickname);
 	}
