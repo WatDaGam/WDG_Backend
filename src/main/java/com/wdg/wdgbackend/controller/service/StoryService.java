@@ -36,15 +36,25 @@ public class StoryService {
 	}
 
 	@Transactional
-	public void likePlus(Long storyId) {
+	public void likePlus(String authorizationHeader, String id) {
+		Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+		Long storyId = Long.parseLong(id);
+
+		userRepository.lockUserLikeNum(userId);
+		userRepository.incrementLikeNum(userId);
 		storyRepository.lockStory(storyId);
 		storyRepository.likePlus(storyId);
 	}
 
 	@Transactional
-	public void likeMinus(Long storyId) {
+	public void likeMinus(String authorizationHeader, String id) {
+		Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+		Long storyId = Long.parseLong(id);
+
 		storyRepository.lockStory(storyId);
 		storyRepository.likeMinus(storyId);
+		userRepository.lockUserLikeNum(userId);
+		userRepository.decrementLikeNum(userId);
 	}
 
 	public String makeStoryJSONObject(Long storyId) {

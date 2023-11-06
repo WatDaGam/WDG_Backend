@@ -30,18 +30,18 @@ public class StoryController {
 		} catch (IOException e) {
 			return new ResponseEntity<>("Invalid story", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Story uploaded successfully", HttpStatus.OK);
+		return new ResponseEntity<>("Story uploaded successfully", HttpStatus.CREATED);
 	}
 
 	@PostMapping("/likePlus")
-	public ResponseEntity<String> likePlus(@RequestParam("storyId") String storyId) {
-		storyService.likePlus(Long.parseLong(storyId));
+	public ResponseEntity<String> likePlus(@RequestHeader("Authorization") String authorizationHeader, @RequestParam("storyId") String storyId) {
+		storyService.likePlus(authorizationHeader, storyId);
 		return new ResponseEntity<>("Like Plus", HttpStatus.OK);
 	}
 
 	@PostMapping("/likeMinus")
-	public ResponseEntity<String> likeMinus(@RequestParam("storyId") String storyId) {
-		storyService.likeMinus(Long.parseLong(storyId));
+	public ResponseEntity<String> likeMinus(@RequestHeader("Authorization") String authorizationHeader, @RequestParam("storyId") String storyId) {
+		storyService.likeMinus(authorizationHeader, storyId);
 		return new ResponseEntity<>("Like Minus", HttpStatus.OK);
 	}
 
