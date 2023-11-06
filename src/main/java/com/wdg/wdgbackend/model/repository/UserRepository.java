@@ -14,6 +14,7 @@ public interface UserRepository {
 	User findUserBySnsId(Long snsId);
 
 	void incrementStoryNum(Long userId);
+	void decrementStoryNum(Long userId);
 	void updateNicknameById(Long userId, String nickname);
 	void deactivateUserById(Long userId);
 	void deleteUserById(Long userId);

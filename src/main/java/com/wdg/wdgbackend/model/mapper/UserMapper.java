@@ -35,6 +35,9 @@ public interface UserMapper {
 	@Update("UPDATE user SET storyNum = storyNum + 1 WHERE id = #{userId}")
 	void incrementStoryNum(Long userId);
 
+	@Update("UPDATE user SET storyNum = storyNum - 1 WHERE id = #{userId}")
+	void decrementStoryNum(Long userId);
+
 	@Update("UPDATE user SET isActive = FALSE WHERE id = #{userId}")
 	void deactivateUserById(Long userId);
 

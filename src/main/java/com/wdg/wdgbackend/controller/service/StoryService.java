@@ -59,7 +59,10 @@ public class StoryService {
 		return storyJson.toString();
 	}
 
-	public void deleteStory(Long storyId) {
-		storyRepository.deleteStory(storyId);
+	@Transactional
+	public void deleteStory(String authorizationHeader, String storyId) {
+		Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+		userRepository.decrementStoryNum(userId);
+		storyRepository.deleteStory(Long.parseLong(storyId));
 	}
 }
