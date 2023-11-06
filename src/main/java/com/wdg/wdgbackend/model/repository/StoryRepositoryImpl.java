@@ -32,8 +32,8 @@ public class StoryRepositoryImpl implements StoryRepository{
 	}
 
 	@Override
-	public void lockStory(Long storyId) {
-		storyMapper.lockStory(storyId);
+	public Integer lockStory(Long storyId) {
+		return storyMapper.lockStory(storyId);
 	}
 
 	@Override

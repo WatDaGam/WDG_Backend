@@ -15,6 +15,9 @@ public interface UserRepository {
 
 	void incrementStoryNum(Long userId);
 	void decrementStoryNum(Long userId);
+	void incrementLikeNum(Long userId);
+	void decrementLikeNum(Long userId);
+	Integer lockUserLikeNum(Long userId);
 	void updateNicknameById(Long userId, String nickname);
 	void deactivateUserById(Long userId);
 	void deleteUserById(Long userId);
