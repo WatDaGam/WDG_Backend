@@ -10,22 +10,23 @@ import org.springframework.stereotype.Service;
 public class UserInfoService {
 
 	private final UserRepository userRepository;
+	private final TokenService tokenServcie;
 
 	@Autowired
-	public UserInfoService(UserRepository userRepository) {
+	public UserInfoService(UserRepository userRepository, TokenService tokenServcie) {
 		this.userRepository = userRepository;
+		this.tokenServcie = tokenServcie;
 	}
 
-	public User getUser(Long id) {
-		return userRepository.findUserById(id);
-	}
-
-	public JSONObject makeUserJSONObject(User user) {
+	public String makeUserJSONObject(String authorizationHeader) {
+		Long userId = tokenServcie.getIdFromAccessToken(authorizationHeader);
+		User user = userRepository.findUserById(userId);
 		JSONObject userJson = new JSONObject();
 
 		userJson.put("nickname", user.getNickname());
 		userJson.put("storyNum", user.getStoryNum());
 		userJson.put("likeNum", user.getLikeNum());
-		return userJson;
+
+		return userJson.toString();
 	}
 }
