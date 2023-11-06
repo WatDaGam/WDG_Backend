@@ -34,8 +34,14 @@ public class StoryController {
 	}
 
 	@GetMapping("/info")
-	public ResponseEntity<String> info(@RequestParam("id") String storyId) {
+	public ResponseEntity<String> info(@RequestParam("storyId") String storyId) {
 		String storyInfoJSON = storyService.makeStoryJSONObject(Long.parseLong(storyId));
 		return new ResponseEntity<>(storyInfoJSON, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/delete")
+	public ResponseEntity<String> delete(@RequestParam("storyId") String storyId) {
+		storyService.deleteStory(Long.parseLong(storyId));
+		return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
 	}
 }
