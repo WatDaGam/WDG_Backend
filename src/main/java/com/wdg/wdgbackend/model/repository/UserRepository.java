@@ -10,8 +10,8 @@ public interface UserRepository {
 	boolean isNicknameNullWithId(Long id);
 	void insertUser(User user);
 
+	User findUserById(Long id);
 	User findUserBySnsId(Long snsId);
-	Long findUserIdByNickname(String nickname);
 
 	void updateNicknameById(Long id, String nickname);
 	void deactivateUserById(Long id);

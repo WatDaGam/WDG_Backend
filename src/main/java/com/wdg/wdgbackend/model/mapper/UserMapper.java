@@ -23,8 +23,18 @@ public interface UserMapper {
 	@Options(useGeneratedKeys = true, keyProperty = "id")
 	void insert(User user);
 
-	@Select("SELECT id FROM user WHERE nickname = #{nickname}")
-	Long findUserIdByNickname(String nickname);
+	@Select("SELECT * FROM user WHERE id = #{id}")
+	@Results({
+			@Result(property = "id", column = "id"),
+			@Result(property = "snsId", column = "sns_id"),
+			@Result(property = "nickname", column = "nickname", javaType = String.class),
+			@Result(property = "sns", column = "sns_platform"),
+			@Result(property = "storyNum", column = "story_num"),
+			@Result(property = "likeNum", column = "like_num"),
+			@Result(property = "createdAt", column = "created_at"),
+			@Result(property = "isActive", column = "is_active")
+	})
+	User findUserById(Long id);
 
 	@Select("SELECT * FROM user WHERE sns_id = #{snsId}")
 	@Results({
@@ -32,13 +42,16 @@ public interface UserMapper {
 			@Result(property = "snsId", column = "sns_id"),
 			@Result(property = "nickname", column = "nickname", javaType = String.class),
 			@Result(property = "sns", column = "sns_platform"),
+			@Result(property = "storyNum", column = "story_num"),
+			@Result(property = "likeNum", column = "like_num"),
 			@Result(property = "createdAt", column = "created_at"),
 			@Result(property = "isActive", column = "is_active")
 	})
 	User findUserBySnsId(Long snsId);
 
 	@Update("UPDATE user SET nickname = #{nickname} WHERE id = #{id}")
-	void updateNicknameById(Long id, String nickname);
+	void updateNicknameById(@Param("id") Long id, @Param("nickname") String nickname);
+
 
 	@Update("UPDATE user SET is_active = FALSE WHERE id = #{id}")
 	void deactivateUserById(Long id);
