@@ -6,15 +6,17 @@ public class Story {
 
 	private Long id;
 	private Long userId;
+	private String nickname;
 	private String content;
 	private Integer likeNum;
 	private Double lati;
 	private Double longi;
 	private Timestamp createdAt;
 
-	public Story(Long id, Long userId, String content, Integer likeNum, Double lati, Double longi) {
+	public Story(Long id, Long userId, String nickname, String content, Integer likeNum, Double lati, Double longi) {
 		this.id = id;
 		this.userId = userId;
+		this.nickname = nickname;
 		this.content = content;
 		this.likeNum = likeNum;
 		this.lati = lati;
@@ -35,6 +37,14 @@ public class Story {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getContent() {
