@@ -12,17 +12,16 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class LoginService {
 
-	private static final int HOUR = 60;
-	private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 10; // 10분
-	private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 24 * HOUR * 30; // 24시간 * 30 = 1달
+	private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60; // 1분
+	private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 2; // 2분
 
 	private final UserRepository userRepository;
-	private final JwtService jwtService;
+	private final TokenService tokenService;
 
 	@Autowired
-	public LoginService(UserRepository userRepository, JwtService jwtService) {
+	public LoginService(UserRepository userRepository, TokenService tokenService) {
 		this.userRepository = userRepository;
-		this.jwtService = jwtService;
+		this.tokenService = tokenService;
 	}
 
 	private HttpEntity<String> makeHttpEntity(String accessToken) {
@@ -49,10 +48,6 @@ public class LoginService {
 		return userRepository.findSnsId(snsId);
 	}
 
-	private boolean isNicknameNull(long snsId) {
-		return userRepository.isNicknameNull(snsId);
-	}
-
 	public boolean alreadySignedIn(long snsId) {
 		return userRepository.findSnsId(snsId) && !userRepository.isNicknameNull(snsId);
 	}
@@ -63,8 +58,8 @@ public class LoginService {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		long accessExpirationTime = System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY;
 		long refreshExpirationTime = System.currentTimeMillis() + REFRESH_TOKEN_EXPIRY;
-		responseHeaders.add("Authorization", "Bearer " + jwtService.generateAccessToken(requestUser, accessExpirationTime));
-		responseHeaders.add("Refresh-Token", jwtService.generateRefreshToken(requestUser, refreshExpirationTime));
+		responseHeaders.add("Authorization", "Bearer " + tokenService.generateAccessToken(requestUser, accessExpirationTime));
+		responseHeaders.add("Refresh-Token", tokenService.generateRefreshToken(requestUser, refreshExpirationTime));
 		responseHeaders.add("Access-Expiration-Time", String.valueOf(accessExpirationTime));
 		responseHeaders.add("Refresh-Expiration-Time", String.valueOf(refreshExpirationTime));
 		return responseHeaders;

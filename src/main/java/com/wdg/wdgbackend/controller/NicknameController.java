@@ -1,6 +1,6 @@
 package com.wdg.wdgbackend.controller;
 
-import com.wdg.wdgbackend.controller.service.JwtService;
+import com.wdg.wdgbackend.controller.service.TokenService;
 import com.wdg.wdgbackend.controller.service.NicknameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 public class NicknameController {
 
 	private final NicknameService nicknameService;
-	private final JwtService jwtService;
+	private final TokenService tokenService;
 
 	@Autowired
-	public NicknameController(NicknameService nicknameService, JwtService jwtService) {
+	public NicknameController(NicknameService nicknameService, TokenService tokenService) {
 		this.nicknameService = nicknameService;
-		this.jwtService = jwtService;
+		this.tokenService = tokenService;
 	}
 
 	@PostMapping("/check")
@@ -28,8 +28,7 @@ public class NicknameController {
 
 	@PostMapping("/set")
 	public ResponseEntity<String> setNickname(@RequestBody String nickname, @RequestHeader("Authorization") String authorizationHeader) {
-		String accessToken = authorizationHeader.replace("Bearer ", "");
-		Long idFromAccessToken = jwtService.getIdFromAccessToken(accessToken);
+		Long idFromAccessToken = tokenService.getIdFromAccessToken(authorizationHeader);
 		if (nicknameService.isNicknameDuplicated(nickname)) return new ResponseEntity<>("duplicated", HttpStatus.OK);
 		nicknameService.setNickname(idFromAccessToken, nickname);
 		return new ResponseEntity<>("ok", HttpStatus.OK);
