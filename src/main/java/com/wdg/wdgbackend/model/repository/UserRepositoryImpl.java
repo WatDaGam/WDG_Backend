@@ -31,8 +31,8 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public boolean isNicknameNullWithId(Long id) {
-		return userMapper.checkNicknameIsNullWithId(id) == 0;
+	public boolean isNicknameNullWithId(Long userId) {
+		return userMapper.checkNicknameIsNullWithId(userId) == 0;
 	}
 
 	@Override
@@ -41,8 +41,8 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public User findUserById(Long id) {
-		return userMapper.findUserById(id);
+	public User findUserById(Long userId) {
+		return userMapper.findUserById(userId);
 	}
 
 	@Override
@@ -56,17 +56,17 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public void updateNicknameById(Long id, String nickname) {
-		userMapper.updateNicknameById(id, nickname);
+	public void updateNicknameById(Long userId, String nickname) {
+		userMapper.updateNicknameById(userId, nickname);
 	}
 
 	@Override
-	public void deactivateUserById(Long id) {
-		userMapper.deactivateUserById(id);
+	public void deactivateUserById(Long userId) {
+		userMapper.deactivateUserById(userId);
 	}
 
 	@Override
-	public void deleteUserById(Long id) {
-		userMapper.deleteUserById(id);
+	public void deleteUserById(Long userId) {
+		userMapper.deleteUserById(userId);
 	}
 }
