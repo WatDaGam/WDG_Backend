@@ -20,4 +20,9 @@ public class StoryRepositoryImpl implements StoryRepository{
 	public void insertStory(Story story) {
 		storyMapper.insert(story);
 	}
+
+	@Override
+	public Story getStory(Long id) {
+		return storyMapper.getStory(id);
+	}
 }
