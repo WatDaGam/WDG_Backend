@@ -69,6 +69,12 @@ public class TokenService {
 		return claims.get("nickname").toString();
 	}
 
+	public Long getSnsIdFromAccessToken(String authorizationHeader) {
+		String accessToken = authorizationHeader.replace("Bearer ", "");
+		Claims claims = Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(accessToken).getPayload();
+		return Long.parseLong(claims.getSubject());
+	}
+
 	public Optional<User> validateToken(String token) {
 		try {
 			Jws<Claims> claimsJws = Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(token);
