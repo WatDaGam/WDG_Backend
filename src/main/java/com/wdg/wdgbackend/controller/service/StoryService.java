@@ -27,7 +27,7 @@ public class StoryService {
 	public void insertNewStory(String authorizationHeader, JsonNode rootNode) {
 		Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
 		String nickname = tokenService.getNicknameFromAccessToken(authorizationHeader);
-		String story = rootNode.get("story").asText();
+		String story = rootNode.get("content").asText();
 		double lati = rootNode.get("lati").asDouble();
 		double longi = rootNode.get("longi").asDouble();
 
@@ -53,7 +53,7 @@ public class StoryService {
 
 		storyJson.put("storyId", story.getId());
 		storyJson.put("nickname", story.getNickname());
-		storyJson.put("story", story.getContent());
+		storyJson.put("content", story.getContent());
 		storyJson.put("likeNum", story.getLikeNum());
 
 		return storyJson.toString();

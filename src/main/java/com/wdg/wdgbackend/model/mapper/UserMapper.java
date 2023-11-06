@@ -57,7 +57,7 @@ public interface UserMapper {
 	@Update("UPDATE user SET nickname = #{nickname} WHERE id = #{id}")
 	void updateNicknameById(@Param("id") Long id, @Param("nickname") String nickname);
 
-	@Update("UPDATE user SET storyNum = storyNum + 1 WHERE id = #{userId}")
+	@Update("UPDATE user SET story_num = story_num + 1 WHERE id = #{userId}")
 	void incrementStoryNum(Long userId);
 
 	@Update("UPDATE user SET is_active = FALSE WHERE id = #{id}")
