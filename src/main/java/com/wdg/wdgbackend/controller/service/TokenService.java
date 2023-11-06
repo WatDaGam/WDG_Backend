@@ -37,6 +37,7 @@ public class TokenService {
 		return Jwts.builder()
 				.subject(String.valueOf(user.getSnsId()))
 				.claim("id", user.getId())
+				.claim("nickname", user.getNickname())
 				.claim("sns", user.getSns())
 				.claim("token-type", "access")
 				.expiration(new Date(expirationTime))
@@ -48,6 +49,7 @@ public class TokenService {
 		return Jwts.builder()
 				.subject(String.valueOf(user.getSnsId()))
 				.claim("id", user.getId())
+				.claim("nickname", user.getNickname())
 				.claim("sns", user.getSns())
 				.claim("token-type", "refresh")
 				.expiration(new Date(expirationTime))
@@ -59,6 +61,12 @@ public class TokenService {
 		String accessToken = authorizationHeader.replace("Bearer ", "");
 		Claims claims = Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(accessToken).getPayload();
 		return Long.parseLong(claims.get("id").toString());
+	}
+
+	public String getNicknameFromAccessToken(String authorizationHeader) {
+		String accessToken = authorizationHeader.replace("Bearer ", "");
+		Claims claims = Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(accessToken).getPayload();
+		return claims.get("nickname").toString();
 	}
 
 	public Optional<User> validateToken(String token) {
