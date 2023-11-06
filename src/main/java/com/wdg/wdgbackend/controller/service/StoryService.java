@@ -31,14 +31,19 @@ public class StoryService {
 		storyRepository.insertStory(new Story(0L, userId, nickname, story, 0, lati, longi));
 	}
 
-	public String makeStoryJSONObject(Long id) {
-		Story story = storyRepository.getStory(id);
+	public String makeStoryJSONObject(Long storyId) {
+		Story story = storyRepository.getStory(storyId);
 		JSONObject storyJson = new JSONObject();
 
+		storyJson.put("storyId", story.getId());
 		storyJson.put("nickname", story.getNickname());
 		storyJson.put("story", story.getContent());
 		storyJson.put("likeNum", story.getLikeNum());
 
 		return storyJson.toString();
+	}
+
+	public void deleteStory(Long storyId) {
+		storyRepository.deleteStory(storyId);
 	}
 }
