@@ -2,6 +2,9 @@ package com.wdg.wdgbackend.model.repository;
 
 import com.wdg.wdgbackend.model.entity.Story;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 public interface StoryRepository {
 	void insertStory(Story story);
 

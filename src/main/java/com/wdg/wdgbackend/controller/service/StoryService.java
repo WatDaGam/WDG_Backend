@@ -75,4 +75,6 @@ public class StoryService {
 		userRepository.decrementStoryNum(userId);
 		storyRepository.deleteStory(Long.parseLong(storyId));
 	}
+
+
 }
