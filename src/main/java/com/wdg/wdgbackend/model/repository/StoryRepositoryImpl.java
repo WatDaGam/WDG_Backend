@@ -6,6 +6,9 @@ import com.wdg.wdgbackend.model.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 @Repository
 public class StoryRepositoryImpl implements StoryRepository{
 
