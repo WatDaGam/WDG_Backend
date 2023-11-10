@@ -8,13 +8,16 @@ import org.springframework.stereotype.Service;
 public class WithdrawalService {
 
 	private final UserRepository userRepository;
+	private final StoryLikeCommonService storyLikeCommonService;
 
 	@Autowired
-	public WithdrawalService(UserRepository userRepository) {
+	public WithdrawalService(UserRepository userRepository, StoryLikeCommonService storyLikeCommonService) {
 		this.userRepository = userRepository;
+		this.storyLikeCommonService = storyLikeCommonService;
 	}
 
 	public void deleteUser(Long userId) {
+		storyLikeCommonService.deleteUserLikes(userId);
 		userRepository.deleteUserById(userId);
 	}
 }

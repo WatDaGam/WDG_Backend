@@ -29,4 +29,20 @@ public class UserInfoService {
 
 		return userJson.toString();
 	}
+
+	public void incrementStoryNum(Long userId) {
+		userRepository.incrementStoryNum(userId);
+	}
+
+	public void decrementStoryNum(Long userId) {
+		userRepository.decrementStoryNum(userId);
+	}
+
+	public void lockUserLikeNum(Long userId) {
+		userRepository.lockUserLikeNum(userId);
+	}
+
+	public void incrementLikeNum(Long userId) {
+		userRepository.incrementLikeNum(userId);
+	}
 }

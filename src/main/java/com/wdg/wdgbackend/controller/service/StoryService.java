@@ -3,7 +3,6 @@ package com.wdg.wdgbackend.controller.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wdg.wdgbackend.model.entity.Story;
 import com.wdg.wdgbackend.model.repository.StoryRepository;
-import com.wdg.wdgbackend.model.repository.UserRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,14 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class StoryService {
 
 	private final StoryRepository storyRepository;
-	private final UserRepository userRepository;
+	private final UserInfoService userInfoService;
 	private final TokenService tokenService;
+	private final StoryLikeCommonService storyLikeCommonService;
 
 	@Autowired
-	public StoryService(StoryRepository storyRepository, UserRepository userRepository, TokenService tokenService) {
+	public StoryService(StoryRepository storyRepository, UserInfoService userInfoService, TokenService tokenService, StoryLikeCommonService storyLikeCommonService) {
 		this.storyRepository = storyRepository;
-		this.userRepository = userRepository;
+		this.userInfoService = userInfoService;
 		this.tokenService = tokenService;
+		this.storyLikeCommonService = storyLikeCommonService;
 	}
 
 	@Transactional
@@ -31,30 +32,8 @@ public class StoryService {
 		double lati = rootNode.get("lati").asDouble();
 		double longi = rootNode.get("longi").asDouble();
 
-		userRepository.incrementStoryNum(userId);
+		userInfoService.incrementStoryNum(userId);
 		storyRepository.insertStory(new Story(0L, userId, nickname, story, 0, lati, longi));
-	}
-
-	@Transactional
-	public void likePlus(String authorizationHeader, String id) {
-		Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
-		Long storyId = Long.parseLong(id);
-
-		userRepository.lockUserLikeNum(userId);
-		userRepository.incrementLikeNum(userId);
-		storyRepository.lockStory(storyId);
-		storyRepository.likePlus(storyId);
-	}
-
-	@Transactional
-	public void likeMinus(String authorizationHeader, String id) {
-		Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
-		Long storyId = Long.parseLong(id);
-
-		storyRepository.lockStory(storyId);
-		storyRepository.likeMinus(storyId);
-		userRepository.lockUserLikeNum(userId);
-		userRepository.decrementLikeNum(userId);
 	}
 
 	public String makeStoryJSONObject(Long storyId) {
@@ -72,9 +51,10 @@ public class StoryService {
 	@Transactional
 	public void deleteStory(String authorizationHeader, String storyId) {
 		Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
-		userRepository.decrementStoryNum(userId);
-		storyRepository.deleteStory(Long.parseLong(storyId));
+		Long storyIdL = Long.parseLong(storyId);
+
+		userInfoService.decrementStoryNum(userId);
+		storyLikeCommonService.deleteStoryLikes(storyIdL);
+		storyRepository.deleteStory(storyIdL);
 	}
-
-
 }
