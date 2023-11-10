@@ -2,6 +2,7 @@ package com.wdg.wdgbackend.controller.service;
 
 import com.wdg.wdgbackend.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,11 +15,11 @@ public class NicknameService {
 		this.userRepository = userRepository;
 	}
 
-	public boolean isNicknameDuplicated(String nickname) {
+	public boolean isNicknameDuplicated(String nickname) throws DataAccessException {
 		return userRepository.isNicknameDup(nickname);
 	}
 
-	public void setNickname(Long userId, String nickname) {
+	public void setNickname(Long userId, String nickname) throws DataAccessException {
 		userRepository.updateNicknameById(userId, nickname);
 	}
 }

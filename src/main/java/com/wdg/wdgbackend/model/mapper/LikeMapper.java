@@ -16,6 +16,6 @@ public interface LikeMapper {
     @Delete("DELETE FROM likes WHERE storyId = #{storyId}")
     void deleteStoryLikes(Long storyId);
 
-    @Delete("DELETE FROM likes WHERE userId = #{userID}")
+    @Delete("DELETE FROM likes WHERE userId = #{userId}")
     void deleteUserLikes(Long userId);
 }
