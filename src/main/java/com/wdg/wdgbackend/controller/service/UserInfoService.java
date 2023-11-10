@@ -1,11 +1,16 @@
 package com.wdg.wdgbackend.controller.service;
 
+import com.wdg.wdgbackend.controller.util.CustomException;
 import com.wdg.wdgbackend.model.entity.User;
 import com.wdg.wdgbackend.model.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class UserInfoService {
 
@@ -19,30 +24,39 @@ public class UserInfoService {
 	}
 
 	public String makeUserJSONObject(String authorizationHeader) {
-		Long userId = tokenServcie.getIdFromAccessToken(authorizationHeader);
-		User user = userRepository.findUserById(userId);
-		JSONObject userJson = new JSONObject();
+		try {
+			Long userId = tokenServcie.getIdFromAccessToken(authorizationHeader);
+			User user = userRepository.findUserById(userId);
 
-		userJson.put("nickname", user.getNickname());
-		userJson.put("storyNum", user.getStoryNum());
-		userJson.put("likeNum", user.getLikeNum());
+			if (user == null) {
+				throw new CustomException("Invalid user", new IllegalArgumentException(), HttpStatus.NOT_FOUND);
+			}
 
-		return userJson.toString();
+			JSONObject userJson = new JSONObject();
+			userJson.put("nickname", user.getNickname());
+			userJson.put("storyNum", user.getStoryNum());
+			userJson.put("likeNum", user.getLikeNum());
+
+			return userJson.toString();
+		} catch (DataAccessException e) {
+			log.error("Database 에러 발생", e);
+			throw new CustomException("Database error", e, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
-	public void incrementStoryNum(Long userId) {
+	public void incrementStoryNum(Long userId) throws DataAccessException {
 		userRepository.incrementStoryNum(userId);
 	}
 
-	public void decrementStoryNum(Long userId) {
+	public void decrementStoryNum(Long userId) throws DataAccessException {
 		userRepository.decrementStoryNum(userId);
 	}
 
-	public void lockUserLikeNum(Long userId) {
+	public void lockUserLikeNum(Long userId) throws DataAccessException {
 		userRepository.lockUserLikeNum(userId);
 	}
 
-	public void incrementLikeNum(Long userId) {
+	public void incrementLikeNum(Long userId) throws DataAccessException {
 		userRepository.incrementLikeNum(userId);
 	}
 }

@@ -1,10 +1,19 @@
 package com.wdg.wdgbackend.controller.service;
 
+import com.wdg.wdgbackend.controller.util.CustomException;
 import com.wdg.wdgbackend.model.entity.User;
 import com.wdg.wdgbackend.model.repository.UserRepository;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -14,9 +23,11 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class TokenService {
 
+	private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
 	private final UserRepository userRepository;
 	@Value("${jwt.secret-key}")
 	private String secretKeyProperty;
@@ -57,22 +68,26 @@ public class TokenService {
 				.compact();
 	}
 
-	public Long getIdFromAccessToken(String authorizationHeader) {
-		String accessToken = authorizationHeader.replace("Bearer ", "");
-		Claims claims = Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(accessToken).getPayload();
-		return Long.parseLong(claims.get("id").toString());
+	public Long getIdFromAccessToken(String authorizationHeader) throws CustomException {
+		return Long.parseLong(getClaims(authorizationHeader).get("id").toString());
 	}
 
-	public String getNicknameFromAccessToken(String authorizationHeader) {
-		String accessToken = authorizationHeader.replace("Bearer ", "");
-		Claims claims = Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(accessToken).getPayload();
-		return claims.get("nickname").toString();
+	public String getNicknameFromAccessToken(String authorizationHeader) throws CustomException {
+		return getClaims(authorizationHeader).get("nickname").toString();
 	}
 
-	public Long getSnsIdFromAccessToken(String authorizationHeader) {
-		String accessToken = authorizationHeader.replace("Bearer ", "");
-		Claims claims = Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(accessToken).getPayload();
-		return Long.parseLong(claims.getSubject());
+	public Long getSnsIdFromAccessToken(String authorizationHeader) throws CustomException {
+		return Long.parseLong(getClaims(authorizationHeader).getSubject());
+	}
+
+	private static Claims getClaims(String authorizationHeader) {
+		try {
+			String accessToken = authorizationHeader.replace("Bearer ", "");
+			return Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(accessToken).getPayload();
+		} catch (JwtException | IllegalArgumentException e) {
+			log.error("JWT 파싱 과정 중 에러 발생", e);
+			throw new CustomException("JWT parsing error", e, HttpStatus.UNAUTHORIZED);
+		}
 	}
 
 	public Optional<User> validateToken(String token) {
@@ -85,7 +100,8 @@ public class TokenService {
 
 			Long snsId = Long.parseLong(claims.getSubject());
 			return Optional.ofNullable(userRepository.findUserBySnsId(snsId));
-		} catch (JwtException | IllegalArgumentException e) {
+		} catch (JwtException | IllegalArgumentException | DataAccessException e) {
+			log.error("토큰 검증 과정 중 에러 발생", e);
 			return Optional.empty();
 		}
 	}

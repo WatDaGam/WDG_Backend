@@ -1,9 +1,10 @@
 package com.wdg.wdgbackend.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wdg.wdgbackend.controller.service.StoryService;
-import com.wdg.wdgbackend.controller.service.TokenService;
+import com.wdg.wdgbackend.controller.util.CustomException;
+import com.wdg.wdgbackend.controller.util.MyJSON;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping("/story")
 public class StoryController {
@@ -24,24 +26,42 @@ public class StoryController {
 
 	@PostMapping("/upload")
 	public ResponseEntity<String> upload(@RequestHeader("Authorization") String authorizationHeader, @RequestBody String jsonData) {
+		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+			return new ResponseEntity<>(MyJSON.message("Invalid Authorization Header"), HttpStatus.BAD_REQUEST);
+		}
+		if (jsonData == null || jsonData.trim().isEmpty()) {
+			return new ResponseEntity<>(MyJSON.message("Invalid nickname"), HttpStatus.BAD_REQUEST);
+		}
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			storyService.insertNewStory(authorizationHeader, objectMapper.readTree(jsonData));
-		} catch (IOException e) {
-			return new ResponseEntity<>("Invalid story", HttpStatus.BAD_REQUEST);
+		} catch (IOException | CustomException e) {
+			return new ResponseEntity<>(MyJSON.message(e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Story uploaded successfully", HttpStatus.CREATED);
+		return new ResponseEntity<>(MyJSON.message("Story uploaded successfully"), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/info")
 	public ResponseEntity<String> info(@RequestParam("storyId") String storyId) {
-		String storyInfoJSON = storyService.makeStoryJSONObject(Long.parseLong(storyId));
-		return new ResponseEntity<>(storyInfoJSON, HttpStatus.OK);
+		try {
+			String storyInfoJSON = storyService.makeStoryJSONObject(storyId);
+			return new ResponseEntity<>(storyInfoJSON, HttpStatus.OK);
+		} catch (CustomException e) {
+			return new ResponseEntity<>(MyJSON.message(e.getMessage()), e.getStatus());
+		}
 	}
 
 	@DeleteMapping("/delete")
 	public ResponseEntity<String> delete(@RequestHeader("Authorization") String authorizationHeader, @RequestParam("storyId") String storyId) {
-		storyService.deleteStory(authorizationHeader, storyId);
-		return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
+		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+			return new ResponseEntity<>(MyJSON.message("Invalid Authorization Header"), HttpStatus.BAD_REQUEST);
+		}
+		try {
+			storyService.deleteStory(authorizationHeader, storyId);
+			return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
+		} catch (CustomException e) {
+			return new ResponseEntity<>(MyJSON.message(e.getMessage()), HttpStatus.BAD_REQUEST);
+		}
 	}
 }
