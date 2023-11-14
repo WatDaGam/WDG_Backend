@@ -45,6 +45,11 @@ public class StoryRepositoryImpl implements StoryRepository{
 	}
 
 	@Override
+	public List<Story> getStoryByUserId(Long userId) {
+		return storyMapper.getStoryByUserId(userId);
+	}
+
+	@Override
 	public void deleteStory(Long storyId) {
 		storyMapper.delete(storyId);
 	}
