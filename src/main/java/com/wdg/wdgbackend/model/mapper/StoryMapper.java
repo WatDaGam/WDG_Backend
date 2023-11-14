@@ -26,6 +26,11 @@ public interface StoryMapper {
 	@Select("SELECT * from story WHERE id = #{storyId}")
 	Story getStory(Long storyId);
 
+	@Select("SELECT id, userId, nickname, content, likeNum ,lati, longi, createdAt FROM story " +
+			"ORDER BY createdAt ASC")
+	List<Story> getStoryByUserId(Long userId);
+
 	@Delete("DELETE FROM story WHERE id = #{storyId}")
 	void delete(Long storyId);
+
 }
