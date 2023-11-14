@@ -13,5 +13,6 @@ public interface StoryRepository {
 	Integer lockStory(Long storyId);
 
 	Story getStory(Long storyId);
+	List<Story> getStoryByUserId(Long userId);
 	void deleteStory(Long storyId);
 }
