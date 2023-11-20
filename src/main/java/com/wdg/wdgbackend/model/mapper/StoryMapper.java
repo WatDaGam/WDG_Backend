@@ -32,5 +32,4 @@ public interface StoryMapper {
 
 	@Delete("DELETE FROM story WHERE id = #{storyId}")
 	void delete(Long storyId);
-
 }

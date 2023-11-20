@@ -10,11 +10,14 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
 
     private final TokenService tokenService;
+//    private final List<String> excludedPaths = Arrays.asList("/login", "/refreshtoken", "/demo-ui.html", "/error", "/favicon.ico");
 
     @Autowired
     public JwtInterceptor(TokenService tokenService) {
@@ -23,6 +26,14 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String path = request.getServletPath();
+
+//        if (excludedPaths.contains(path)) {
+//            System.out.println("in if path = " + path);
+//            return true;
+//        }
+
+        System.out.println("path = " + path);
         String header = request.getHeader("Authorization");
         String token = null;
 
