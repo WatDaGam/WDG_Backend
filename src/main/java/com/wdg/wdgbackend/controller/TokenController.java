@@ -3,6 +3,10 @@ package com.wdg.wdgbackend.controller;
 import com.wdg.wdgbackend.controller.service.TokenService;
 import com.wdg.wdgbackend.controller.util.MyJSON;
 import com.wdg.wdgbackend.model.entity.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +32,56 @@ public class TokenController {
     }
 
     @GetMapping("/refreshtoken")
+    @Operation(
+            summary = "리프레시 토큰으로 엑세스 토큰 갱신",
+            description = "제공된 리프레시 토큰을 검증하고 새로운 엑세스 토큰을 발급합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "엑세스 토큰 갱신 성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(
+                                            name = "SuccessResponse",
+                                            value = "{\"Authorization\": \"Bearer new_access_token\", \"Access-Expiration-Time\": \"expiration_time\"}"
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "리프레시 토큰 없음",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(
+                                            name = "NoRefreshToken",
+                                            value = "{\"message\": \"Refresh Token is required\"}"
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "리프레시 토큰 무효 또는 만료",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(
+                                            name = "InvalidOrExpiredRefreshToken",
+                                            value = "{\"message\": \"Refresh Token is invalid or expired\"}"
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 내부 오류",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(
+                                            name = "ServerError",
+                                            value = "{\"message\": \"Error occurred while validating token\"}"
+                                    )
+                            )
+                    )
+            }
+    )
     public ResponseEntity<?> refreshToken(@RequestHeader("Refresh-Token") String refreshToken) {
         if (refreshToken == null || refreshToken.trim().isEmpty()) {
             return new ResponseEntity<>(MyJSON.message("Refresh Token is required"), HttpStatus.BAD_REQUEST);
@@ -48,5 +102,4 @@ public class TokenController {
             return new ResponseEntity<>(MyJSON.message("Error occurred while validating token"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
