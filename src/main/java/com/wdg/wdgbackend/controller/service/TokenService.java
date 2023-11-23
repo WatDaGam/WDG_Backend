@@ -46,8 +46,8 @@ public class TokenService {
 	public String generateAccessToken(User user, long expirationTime) {
 
 		return Jwts.builder()
-				.subject(String.valueOf(user.getSnsId()))
 				.claim("id", user.getId())
+				.claim("snsId", user.getSnsId())
 				.claim("nickname", user.getNickname())
 				.claim("platform", user.getPlatform())
 				.claim("token-type", "access")
@@ -58,7 +58,7 @@ public class TokenService {
 
 	public String generateRefreshToken(User user, long expirationTime) {
 		return Jwts.builder()
-				.subject(String.valueOf(user.getSnsId()))
+				.claim("snsId", user.getSnsId())
 				.claim("id", user.getId())
 				.claim("nickname", user.getNickname())
 				.claim("platform", user.getPlatform())
@@ -69,7 +69,9 @@ public class TokenService {
 	}
 
 	public Long getIdFromAccessToken(String authorizationHeader) throws CustomException {
-		return Long.parseLong(getClaims(authorizationHeader).get("id").toString());
+		Long id = Long.parseLong(getClaims(authorizationHeader).get("id").toString());
+		System.out.println("id = " + id);
+		return id;
 	}
 
 	public String getNicknameFromAccessToken(String authorizationHeader) throws CustomException {
@@ -77,7 +79,7 @@ public class TokenService {
 	}
 
 	public Long getSnsIdFromAccessToken(String authorizationHeader) throws CustomException {
-		return Long.parseLong(getClaims(authorizationHeader).getSubject());
+		return Long.parseLong(getClaims(authorizationHeader).get("snsId").toString());
 	}
 
 	private static Claims getClaims(String authorizationHeader) {
@@ -98,7 +100,7 @@ public class TokenService {
 
 			if (expiration.before(new Date())) return Optional.empty();
 
-			Long snsId = Long.parseLong(claims.getSubject());
+			Long snsId = claims.get("snsId", Long.class);
 			return Optional.ofNullable(userRepository.findUserBySnsId(snsId));
 		} catch (JwtException | IllegalArgumentException | DataAccessException e) {
 			log.error("토큰 검증 과정 중 에러 발생", e);

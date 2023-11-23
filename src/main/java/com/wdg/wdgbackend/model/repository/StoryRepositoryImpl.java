@@ -35,6 +35,11 @@ public class StoryRepositoryImpl implements StoryRepository{
 	}
 
 	@Override
+	public Long getUserIdFromStory(Long storyId) {
+		return storyMapper.getUserIdFromStory(storyId);
+	}
+
+	@Override
 	public Integer lockStory(Long storyId) {
 		return storyMapper.lockStory(storyId);
 	}
@@ -53,6 +58,4 @@ public class StoryRepositoryImpl implements StoryRepository{
 	public void deleteStory(Long storyId) {
 		storyMapper.delete(storyId);
 	}
-
-
 }

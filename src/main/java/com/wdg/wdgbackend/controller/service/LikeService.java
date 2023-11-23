@@ -1,6 +1,7 @@
 package com.wdg.wdgbackend.controller.service;
 
 import com.wdg.wdgbackend.controller.util.CustomException;
+import com.wdg.wdgbackend.model.repository.StoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,12 +28,13 @@ public class LikeService {
         try {
             Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
             Long storyId = Long.parseLong(id);
+            Long writerId = storyLikeCommonService.getUserIdFromStory(storyId);
 
             if (storyLikeCommonService.isLiked(userId, storyId)) return;
 
-            storyLikeCommonService.linkUserAndStory(userId, storyId);
-            userInfoService.lockUserLikeNum(userId);
-            userInfoService.incrementLikeNum(userId);
+            storyLikeCommonService.linkUserAndStory(userId, storyId, writerId);
+            userInfoService.lockUserLikeNum(writerId);
+            userInfoService.incrementLikeNum(writerId);
             storyLikeCommonService.lockStoryLike(storyId);
             storyLikeCommonService.likePlus(storyId);
         } catch (NumberFormatException e) {
@@ -43,5 +45,4 @@ public class LikeService {
             throw new CustomException("Error occurred while processing like", e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

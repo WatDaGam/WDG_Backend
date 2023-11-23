@@ -23,8 +23,8 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class LoginService {
 
-	private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 10; // 10분
-	private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 20; // 20분
+	private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 60 * 24 * 7; // 1주일
+	private static final long REFRESH_TOKEN_EXPIRY = ACCESS_TOKEN_EXPIRY * 4; // 1달
 
 	private final UserRepository userRepository;
 	private final TokenService tokenService;
@@ -71,7 +71,7 @@ public class LoginService {
 	}
 
 	public void insertUser(long snsId) throws DataAccessException {
-		userRepository.insertUser(new User(0L, snsId, SNSPlatform.KAKAO.ordinal()));
+		userRepository.insertUser(new User(0L, snsId, SNSPlatform.KAKAO.ordinal(), System.currentTimeMillis()));
 	}
 
 	public HttpHeaders getHttpHeaders(long snsId) throws DataAccessException {

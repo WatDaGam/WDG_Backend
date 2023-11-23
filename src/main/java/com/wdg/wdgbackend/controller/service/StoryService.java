@@ -40,7 +40,7 @@ public class StoryService {
 			double longi = rootNode.get("longi").asDouble();
 
 			userInfoService.incrementStoryNum(userId);
-			storyRepository.insertStory(new Story(0L, userId, nickname, story, 0, lati, longi));
+			storyRepository.insertStory(new Story(0L, userId, nickname, story, 0, lati, longi, System.currentTimeMillis()));
 		} catch (DataAccessException | IllegalArgumentException e) {
 			log.error("story 추가 중 에러 발생", e);
 			throw new CustomException("Error occurred while inserting a story", e, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,6 +62,7 @@ public class StoryService {
 		storyJson.put("nickname", story.getNickname());
 		storyJson.put("content", story.getContent());
 		storyJson.put("likeNum", story.getLikeNum());
+		storyJson.put("createdAt", story.getCreatedAt());
 
 		return storyJson.toString();
 	}
@@ -75,9 +76,12 @@ public class StoryService {
 			userInfoService.decrementStoryNum(userId);
 			storyLikeCommonService.deleteStoryLikes(storyIdL);
 			storyRepository.deleteStory(storyIdL);
-		} catch (DataAccessException | IllegalArgumentException e) {
-			log.error("story 삭제 중 에러 발생", e);
-			throw new CustomException("Error occurred while deleting a story", e, HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (DataAccessException e) {
+			log.error("story 삭제 중 데이터베이스 에러 발생", e);
+			throw new CustomException("Database error occurred while deleting a story", e, HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (IllegalArgumentException e) {
+			log.error("적절하지 않은 storyId");
+			throw new CustomException("Error occurred while deleting a story", e, HttpStatus.NOT_FOUND);
 		}
 	}
 }

@@ -61,8 +61,8 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public void incrementLikeNum(Long userId) {
-		userMapper.incrementLikeNum(userId);
+	public void incrementLikeNum(Long writerId) {
+		userMapper.incrementLikeNum(writerId);
 	}
 
 	@Override
@@ -71,8 +71,8 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public Integer lockUserLikeNum(Long userId) {
-		return userMapper.lockUserLikeNum(userId);
+	public Integer lockUserLikeNum(Long writerId) {
+		return userMapper.lockUserLikeNum(writerId);
 	}
 
 	@Override

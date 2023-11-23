@@ -1,22 +1,21 @@
 package com.wdg.wdgbackend.model.entity;
 
-import java.sql.Timestamp;
-
 public class User {
 
 	private Long id;
 	private Long snsId;
 	private Integer platform;
 	private String nickname;
-	private Timestamp createdAt;
+	private Long createdAt;
 	private int storyNum;
 	private int likeNum;
 	private Boolean isActive;
 
-	public User(Long id, Long snsId, Integer platform) {
+	public User(Long id, Long snsId, Integer platform, Long createdAt) {
 		this.id = id;
 		this.snsId = snsId;
 		this.platform = platform;
+		this.createdAt = createdAt;
 	}
 
 	public int getStoryNum() {
@@ -35,11 +34,11 @@ public class User {
 		this.likeNum = likeNum;
 	}
 
-	public Timestamp getCreatedAt() {
+	public Long getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Timestamp createdAt) {
+	public void setCreatedAt(Long createdAt) {
 		this.createdAt = createdAt;
 	}
 
