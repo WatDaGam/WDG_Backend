@@ -37,7 +37,7 @@ public class LikeController {
                                     mediaType = "application/json",
                                     examples = @ExampleObject(
                                             name = "SuccessResponse",
-                                            value = "{\"message\": \"Like plus\"}"
+                                            value = "{\"likeNum\": \"1\"}"
                                     )
                             )
                     ),
@@ -77,6 +77,6 @@ public class LikeController {
         } catch (CustomException e) {
             return new ResponseEntity<>(MyJSON.message(e.getMessage()), e.getStatus());
         }
-        return new ResponseEntity<>(MyJSON.message("Like plus"), HttpStatus.OK);
+        return new ResponseEntity<>(likeService.getStoryLikeNumJSON(storyId).toString(), HttpStatus.OK);
     }
 }

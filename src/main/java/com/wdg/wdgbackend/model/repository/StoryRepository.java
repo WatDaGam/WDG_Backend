@@ -11,6 +11,7 @@ public interface StoryRepository {
 	void likePlus(Long storyId);
 	void likeMinus(Long storyId);
 	Long getUserIdFromStory(Long storyId);
+	Integer getStoryLikeNum(Long storyId);
 	Integer lockStory(Long storyId);
 
 	Story getStory(Long storyId);

@@ -46,4 +46,7 @@ public class StoryLikeCommonService {
         return storyRepository.getUserIdFromStory(storyId);
     }
 
+    public Integer getStoryLikeNum(Long storyId) {
+        return storyRepository.getStoryLikeNum(storyId);
+    }
 }

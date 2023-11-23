@@ -27,6 +27,9 @@ public interface StoryMapper {
 	@Select("SELECT id, userId, nickname, content, likeNum, createdAt ,lati, longi from story WHERE id = #{storyId}")
 	Story getStory(Long storyId);
 
+	@Select("SELECT likeNum from story WHERE id = #{storyId}")
+	Integer getStoryLikeNum(Long storyId);
+
 	@Select("SELECT id, userId, nickname, content, likeNum, createdAt ,lati, longi FROM story " +
 			"WHERE userId = #{userId} " +
 			"ORDER BY createdAt ASC")

@@ -3,6 +3,7 @@ package com.wdg.wdgbackend.controller.service;
 import com.wdg.wdgbackend.controller.util.CustomException;
 import com.wdg.wdgbackend.model.repository.StoryRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -44,5 +45,15 @@ public class LikeService {
             log.error("Database 에러", e);
             throw new CustomException("Error occurred while processing like", e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public JSONObject getStoryLikeNumJSON(String storyId) {
+        JSONObject responseJSON = new JSONObject();
+        responseJSON.put("likeNum", getStoryLikeNum(Long.parseLong(storyId)));
+        return responseJSON;
+    }
+
+    private Integer getStoryLikeNum(Long storyId) {
+        return storyLikeCommonService.getStoryLikeNum(storyId);
     }
 }
