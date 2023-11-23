@@ -36,6 +36,7 @@ public class UserInfoService {
 			userJson.put("nickname", user.getNickname());
 			userJson.put("storyNum", user.getStoryNum());
 			userJson.put("likeNum", user.getLikeNum());
+			userJson.put("createdAt", user.getCreatedAt());
 
 			return userJson.toString();
 		} catch (DataAccessException e) {
@@ -52,11 +53,11 @@ public class UserInfoService {
 		userRepository.decrementStoryNum(userId);
 	}
 
-	public void lockUserLikeNum(Long userId) throws DataAccessException {
-		userRepository.lockUserLikeNum(userId);
+	public void lockUserLikeNum(Long writerId) throws DataAccessException {
+		userRepository.lockUserLikeNum(writerId);
 	}
 
-	public void incrementLikeNum(Long userId) throws DataAccessException {
-		userRepository.incrementLikeNum(userId);
+	public void incrementLikeNum(Long writerId) throws DataAccessException {
+		userRepository.incrementLikeNum(writerId);
 	}
 }

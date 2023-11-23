@@ -18,8 +18,8 @@ public interface UserMapper {
 	@Select("SELECT CASE WHEN nickname IS NULL THEN 0 ELSE 1 END FROM user WHERE id = #{userId}")
 	int checkNicknameIsNullWithId(long userId);
 
-	@Insert("INSERT INTO user (snsId, platform) " +
-			"VALUES (#{snsId}, #{platform})")
+	@Insert("INSERT INTO user (snsId, platform, createdAt) " +
+			"VALUES (#{snsId}, #{platform}, #{createdAt})")
 	@Options(useGeneratedKeys = true, keyProperty = "id")
 	void insert(User user);
 
@@ -44,8 +44,8 @@ public interface UserMapper {
 	@Update("UPDATE user SET likeNum = likeNum - 1 WHERE id = #{userId}")
 	void decrementLikeNum(Long userId);
 
-	@Select("SELECT likeNum FROM user WHERE id = #{userId} FOR UPDATE")
-	Integer lockUserLikeNum(Long userId);
+	@Select("SELECT likeNum FROM user WHERE id = #{writerId} FOR UPDATE")
+	Integer lockUserLikeNum(Long writerId);
 
 	@Update("UPDATE user SET isActive = FALSE WHERE id = #{userId}")
 	void deactivateUserById(Long userId);

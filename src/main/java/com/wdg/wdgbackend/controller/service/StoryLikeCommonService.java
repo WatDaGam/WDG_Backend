@@ -18,8 +18,8 @@ public class StoryLikeCommonService {
         this.likeRepository = likeRepository;
     }
 
-    public void linkUserAndStory(Long userId, Long storyId) throws DataAccessException {
-        likeRepository.linkUserAndStory(userId, storyId);
+    public void linkUserAndStory(Long userId, Long storyId, Long writerId) throws DataAccessException {
+        likeRepository.linkUserAndStory(userId, storyId, writerId);
     }
 
     public boolean isLiked(Long userId, Long storyId) throws DataAccessException {
@@ -40,6 +40,10 @@ public class StoryLikeCommonService {
 
     public void likePlus(Long storyId) throws DataAccessException {
         storyRepository.likePlus(storyId);
+    }
+
+    public Long getUserIdFromStory(Long storyId) throws DataAccessException {
+        return storyRepository.getUserIdFromStory(storyId);
     }
 
 }

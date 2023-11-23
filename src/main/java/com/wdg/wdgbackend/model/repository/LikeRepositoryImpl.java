@@ -15,8 +15,11 @@ public class LikeRepositoryImpl implements LikeRepository {
     }
 
     @Override
-    public void linkUserAndStory(Long userId, Long storyId) {
-        likeMapper.insertLike(userId, storyId);
+    public void linkUserAndStory(Long userId, Long storyId, Long writerId) {
+        System.out.println("userId = " + userId);
+        System.out.println("storyId = " + storyId);
+        System.out.println("writerId = " + writerId);
+        likeMapper.insertLike(userId, storyId, writerId);
     }
 
     @Override

@@ -9,11 +9,11 @@ public class Story {
 	private String nickname;
 	private String content;
 	private Integer likeNum;
+	private Long createdAt;
 	private Double lati;
 	private Double longi;
-	private Timestamp createdAt;
 
-	public Story(Long id, Long userId, String nickname, String content, Integer likeNum, Double lati, Double longi) {
+	public Story(Long id, Long userId, String nickname, String content, Integer likeNum, Double lati, Double longi, Long createdAt) {
 		this.id = id;
 		this.userId = userId;
 		this.nickname = nickname;
@@ -21,6 +21,7 @@ public class Story {
 		this.likeNum = likeNum;
 		this.lati = lati;
 		this.longi = longi;
+		this.createdAt = createdAt;
 	}
 
 	public Long getId() {
@@ -79,11 +80,11 @@ public class Story {
 		this.longi = longi;
 	}
 
-	public Timestamp getCreatedAt() {
+	public Long getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Timestamp createdAt) {
+	public void setCreatedAt(Long createdAt) {
 		this.createdAt = createdAt;
 	}
 }
