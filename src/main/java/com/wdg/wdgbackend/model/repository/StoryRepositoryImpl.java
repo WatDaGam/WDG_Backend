@@ -40,6 +40,11 @@ public class StoryRepositoryImpl implements StoryRepository{
 	}
 
 	@Override
+	public Integer getStoryLikeNum(Long storyId) {
+		return storyMapper.getStoryLikeNum(storyId);
+	}
+
+	@Override
 	public Integer lockStory(Long storyId) {
 		return storyMapper.lockStory(storyId);
 	}
