@@ -1,5 +1,7 @@
 package com.wdg.wdgbackend.model.entity;
 
+import java.util.List;
+
 public class User {
 
 	private Long id;
@@ -9,6 +11,7 @@ public class User {
 	private Long createdAt;
 	private int storyNum;
 	private int likeNum;
+	private List<String> reportedStories;
 	private Boolean isActive;
 
 	public User(Long id, Long snsId, Integer platform, Long createdAt) {
@@ -16,6 +19,14 @@ public class User {
 		this.snsId = snsId;
 		this.platform = platform;
 		this.createdAt = createdAt;
+	}
+
+	public List<String> getReportedStories() {
+		return reportedStories;
+	}
+
+	public void setReportedStories(List<String> reportedStories) {
+		this.reportedStories = reportedStories;
 	}
 
 	public int getStoryNum() {

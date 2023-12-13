@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @Service
 public class StoryLikeCommonService {
 
@@ -35,14 +38,14 @@ public class StoryLikeCommonService {
     }
 
     public void lockStoryLike(Long storyId) throws DataAccessException {
-        storyRepository.lockStory(storyId);
+        storyRepository.lockStoryLikeNum(storyId);
     }
 
     public void likePlus(Long storyId) throws DataAccessException {
         storyRepository.likePlus(storyId);
     }
 
-    public Long getUserIdFromStory(Long storyId) throws DataAccessException {
+    public Optional<Long> getUserIdFromStory(Long storyId) throws DataAccessException {
         return storyRepository.getUserIdFromStory(storyId);
     }
 

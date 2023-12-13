@@ -7,8 +7,13 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface LikeMapper {
+
+    @Insert("INSERT INTO likes (userId, storyId) VALUES (#{userId}, #{storyId})")
+    void insertLikeNULLUser(Long userId, Long storyId);
+
     @Insert("INSERT INTO likes (userId, storyId, writerId) VALUES (#{userId}, #{storyId}, #{writerId})")
     void insertLike(Long userId, Long storyId, Long writerId);
+
 
     @Select("SELECT EXISTS (SELECT 1 FROM likes WHERE userId = #{userId} AND storyId = #{storyId})")
     boolean isLiked(Long userId, Long storyId);

@@ -18,13 +18,16 @@ public interface StoryMapper {
 	@Update("UPDATE story SET likeNum = likeNum - 1 WHERE id = #{storyId}")
 	void likeMinus(Long storyId);
 
+	@Select("SELECT content FROM story WHERE id = #{storyId}")
+	String getContent(Long storyId);
+
 	@Select("SELECT userId FROM story WHERE id = #{storyId}")
 	Long getUserIdFromStory(Long storyId);
 
 	@Select("SELECT likeNum FROM story WHERE id = #{storyId} FOR UPDATE")
-	Integer lockStory(Long storyId);
+	Integer lockStoryLikeNum(Long storyId);
 
-	@Select("SELECT id, userId, nickname, content, likeNum, createdAt ,lati, longi from story WHERE id = #{storyId}")
+	@Select("SELECT id, userId, nickname, content, likeNum, createdAt ,lati, longi, reportNum from story WHERE id = #{storyId}")
 	Story getStory(Long storyId);
 
 	@Select("SELECT likeNum from story WHERE id = #{storyId}")

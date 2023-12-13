@@ -10,10 +10,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,15 +35,14 @@ public class StoryController {
 	@Operation(
 			summary = "스토리 업로드",
 			description = "새로운 스토리를 업로드합니다.",
-			requestBody = @RequestBody(
+			requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
 					required = true,
 					content = @Content(
 							mediaType = "application/json",
-							schema = @Schema(implementation = Story.class),
-							examples = @ExampleObject(
+							schema = @Schema(
 									name = "StoryUploadExample",
-									summary = "스토리 업로드 예시",
-									value = "{\"lati\": 37.5665, \"longi\": 126.9780, \"content\": \"여기는 서울!\"}"
+									example = "{\"lati\": 37.5665, \"longi\": 126.9780, \"content\": \"여기는 서울!\"}"
+
 							)
 					)
 			),
@@ -69,6 +68,17 @@ public class StoryController {
 											value = "{\"message\": \"Error occurred while inserting a story\"}"
 									)
 							)
+					),
+					@ApiResponse(
+							responseCode = "400",
+							description = "잘못된 요청",
+							content = @Content(
+									mediaType = "application/json",
+									examples = @ExampleObject(
+											name = "BadRequest",
+											value = "{\"message\": \"Invalid json\"}"
+									)
+							)
 					)
 			}
 	)
@@ -76,8 +86,9 @@ public class StoryController {
 		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 			return new ResponseEntity<>(MyJSON.message("Invalid Authorization Header"), HttpStatus.BAD_REQUEST);
 		}
+
 		if (jsonData == null || jsonData.trim().isEmpty()) {
-			return new ResponseEntity<>(MyJSON.message("Invalid nickname"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(MyJSON.message("Invalid json"), HttpStatus.BAD_REQUEST);
 		}
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -117,16 +128,16 @@ public class StoryController {
 							)
 					),
 					@ApiResponse(
-					responseCode = "400",
-					description = "스토리 id 에러",
-					content = @Content(
-							mediaType = "application/json",
-							examples = @ExampleObject(
-									name = "NotFoundResponse",
-									value = "{\"message\": \"storyId Number format error\"}"
+							responseCode = "400",
+							description = "스토리 id 에러",
+							content = @Content(
+									mediaType = "application/json",
+									examples = @ExampleObject(
+											name = "NotFoundResponse",
+											value = "{\"message\": \"storyId Number format error\"}"
+									)
 							)
 					)
-			)
 			}
 	)
 	public ResponseEntity<String> info(@RequestParam("storyId") String storyId) {

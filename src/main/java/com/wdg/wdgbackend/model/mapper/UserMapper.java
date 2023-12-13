@@ -12,6 +12,9 @@ public interface UserMapper {
 	@Select("SELECT COUNT(*) FROM user WHERE nickname = #{nickname}")
 	int checkNicknameDup(String nickname);
 
+	@Select("SELECT COUNT(*) FROM user WHERE id = #{userId}")
+	int isUserExists(Long userId);
+
 	@Select("SELECT CASE WHEN nickname IS NULL THEN 0 ELSE 1 END FROM user WHERE snsId = #{snsId}")
 	int checkNicknameIsNull(long snsId);
 
@@ -43,6 +46,9 @@ public interface UserMapper {
 
 	@Update("UPDATE user SET likeNum = likeNum - 1 WHERE id = #{userId}")
 	void decrementLikeNum(Long userId);
+
+	@Update("UPDATE user SET reportedStories = NULL WHERE id = #{userId}")
+	void clearReportedStories(Long userId);
 
 	@Select("SELECT likeNum FROM user WHERE id = #{writerId} FOR UPDATE")
 	Integer lockUserLikeNum(Long writerId);

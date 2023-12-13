@@ -8,6 +8,7 @@ public interface UserRepository {
 	boolean isNicknameDup(String nickname);
 	boolean isNicknameNull(long snsId);
 	boolean isNicknameNullWithId(Long userId);
+	boolean isUserExists(Long userId);
 	void insertUser(User user);
 
 	User findUserById(Long userId);
@@ -17,6 +18,7 @@ public interface UserRepository {
 	void decrementStoryNum(Long userId);
 	void incrementLikeNum(Long writerId);
 	void decrementLikeNum(Long userId);
+	void clearReportedStories(Long userId);
 	Integer lockUserLikeNum(Long writerId);
 	void updateNicknameById(Long userId, String nickname);
 	void deactivateUserById(Long userId);
