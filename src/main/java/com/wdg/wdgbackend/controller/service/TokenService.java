@@ -70,7 +70,6 @@ public class TokenService {
 
 	public Long getIdFromAccessToken(String authorizationHeader) throws CustomException {
 		Long id = Long.parseLong(getClaims(authorizationHeader).get("id").toString());
-		System.out.println("id = " + id);
 		return id;
 	}
 
@@ -94,6 +93,7 @@ public class TokenService {
 
 	public Optional<User> validateToken(String token) {
 		try {
+			if (token == null) return Optional.empty();
 			Jws<Claims> claimsJws = Jwts.parser().verifyWith((SecretKey) secretKey).build().parseSignedClaims(token);
 			Claims claims = claimsJws.getPayload();
 			Date expiration = claims.getExpiration();
@@ -102,8 +102,11 @@ public class TokenService {
 
 			Long snsId = claims.get("snsId", Long.class);
 			return Optional.ofNullable(userRepository.findUserBySnsId(snsId));
-		} catch (JwtException | IllegalArgumentException | DataAccessException e) {
-			log.error("토큰 검증 과정 중 에러 발생", e);
+		} catch (JwtException e) {
+			log.error("토큰 검증 과정 중 JWT 에러 발생", e);
+			return Optional.empty();
+		} catch (DataAccessException e) {
+			log.error("데이터베이스 에러 발생", e);
 			return Optional.empty();
 		}
 	}

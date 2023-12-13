@@ -12,6 +12,7 @@ public class Story {
 	private Long createdAt;
 	private Double lati;
 	private Double longi;
+	private Integer reportNum;
 
 	public Story(Long id, Long userId, String nickname, String content, Integer likeNum, Double lati, Double longi, Long createdAt) {
 		this.id = id;
@@ -86,5 +87,13 @@ public class Story {
 
 	public void setCreatedAt(Long createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public Integer getReportNum() {
+		return reportNum;
+	}
+
+	public void setReportNum(Integer reportNum) {
+		this.reportNum = reportNum;
 	}
 }

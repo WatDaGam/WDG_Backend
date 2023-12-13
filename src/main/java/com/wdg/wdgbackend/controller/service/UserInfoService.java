@@ -4,6 +4,8 @@ import com.wdg.wdgbackend.controller.util.CustomException;
 import com.wdg.wdgbackend.model.entity.User;
 import com.wdg.wdgbackend.model.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.json.HTTP;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -38,10 +40,18 @@ public class UserInfoService {
 			userJson.put("likeNum", user.getLikeNum());
 			userJson.put("createdAt", user.getCreatedAt());
 
+			if (user.getReportedStories() != null && !user.getReportedStories().isEmpty()) {
+				userJson.put("reportedStories", new JSONArray(user.getReportedStories()));
+				userRepository.clearReportedStories(userId);
+			}
+
 			return userJson.toString();
 		} catch (DataAccessException e) {
 			log.error("Database 에러 발생", e);
 			throw new CustomException("Database error", e, HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (Exception e) {
+			log.error("기다 에러 발생", e);
+			throw new CustomException(e.getMessage(), e, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

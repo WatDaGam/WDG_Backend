@@ -38,7 +38,6 @@ public class StoryListController {
 					content = @Content(
 							mediaType = "application/json",
 							schema = @Schema(
-									implementation = Story.class,
 									example = "{\"lati\": 37.5665, \"longi\": 126.9780}"
 							)
 					)

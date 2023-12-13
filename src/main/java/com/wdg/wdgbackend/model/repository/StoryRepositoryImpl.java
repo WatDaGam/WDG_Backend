@@ -2,12 +2,11 @@ package com.wdg.wdgbackend.model.repository;
 
 import com.wdg.wdgbackend.model.entity.Story;
 import com.wdg.wdgbackend.model.mapper.StoryMapper;
-import com.wdg.wdgbackend.model.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class StoryRepositoryImpl implements StoryRepository{
@@ -35,8 +34,13 @@ public class StoryRepositoryImpl implements StoryRepository{
 	}
 
 	@Override
-	public Long getUserIdFromStory(Long storyId) {
-		return storyMapper.getUserIdFromStory(storyId);
+	public Optional<Long> getUserIdFromStory(Long storyId) {
+		return Optional.ofNullable(storyMapper.getUserIdFromStory(storyId));
+	}
+
+	@Override
+	public String getContent(Long storyId) {
+		return storyMapper.getContent(storyId);
 	}
 
 	@Override
@@ -45,8 +49,8 @@ public class StoryRepositoryImpl implements StoryRepository{
 	}
 
 	@Override
-	public Integer lockStory(Long storyId) {
-		return storyMapper.lockStory(storyId);
+	public Integer lockStoryLikeNum(Long storyId) {
+		return storyMapper.lockStoryLikeNum(storyId);
 	}
 
 	@Override

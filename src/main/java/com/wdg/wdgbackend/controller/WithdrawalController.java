@@ -77,6 +77,7 @@ public class WithdrawalController {
 		}
 		try {
 			Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+
 			withdrawalService.deleteUser(userId);
 			return new ResponseEntity<>("Deleted", HttpStatus.OK);
 		} catch (CustomException e) {

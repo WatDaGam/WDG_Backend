@@ -1,6 +1,7 @@
 package com.wdg.wdgbackend.controller.service;
 
 import com.wdg.wdgbackend.controller.util.CustomException;
+import com.wdg.wdgbackend.model.repository.ReportRepository;
 import com.wdg.wdgbackend.model.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +14,20 @@ import org.springframework.stereotype.Service;
 public class WithdrawalService {
 
 	private final UserRepository userRepository;
+	private final ReportRepository reportRepository;
 	private final StoryLikeCommonService storyLikeCommonService;
 
 	@Autowired
-	public WithdrawalService(UserRepository userRepository, StoryLikeCommonService storyLikeCommonService) {
+	public WithdrawalService(UserRepository userRepository, ReportRepository reportRepository, StoryLikeCommonService storyLikeCommonService) {
 		this.userRepository = userRepository;
+		this.reportRepository = reportRepository;
 		this.storyLikeCommonService = storyLikeCommonService;
 	}
 
 	public void deleteUser(Long userId) {
 		try {
 			storyLikeCommonService.deleteUserLikes(userId);
+			reportRepository.deleteUserReports(userId);
 			userRepository.deleteUserById(userId);
 		} catch (DataAccessException e) {
 			log.error("삭제 과정 중 Database 에러 발생", e);

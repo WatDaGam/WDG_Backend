@@ -36,6 +36,11 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
+	public boolean isUserExists(Long userId) {
+		return userMapper.isUserExists(userId) == 1;
+	}
+
+	@Override
 	public void insertUser(User user) {
 		userMapper.insert(user);
 	}
@@ -68,6 +73,11 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public void decrementLikeNum(Long userId) {
 		userMapper.decrementLikeNum(userId);
+	}
+
+	@Override
+	public void clearReportedStories(Long userId) {
+		userMapper.clearReportedStories(userId);
 	}
 
 	@Override
