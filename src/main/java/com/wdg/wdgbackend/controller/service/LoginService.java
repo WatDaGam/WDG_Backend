@@ -23,9 +23,6 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class LoginService {
 
-	private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 60 * 24 * 7; // 1주일
-	private static final long REFRESH_TOKEN_EXPIRY = ACCESS_TOKEN_EXPIRY * 4; // 1달
-
 	private final UserRepository userRepository;
 	private final TokenService tokenService;
 
@@ -78,7 +75,11 @@ public class LoginService {
 		User requestUser = findUserBySnsId(snsId);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
+		// 1주일
+		long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 60 * 24 * 7; // 1주일
 		long accessExpirationTime = System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY;
+		// 1달
+		long REFRESH_TOKEN_EXPIRY = ACCESS_TOKEN_EXPIRY * 4; // 1달
 		long refreshExpirationTime = System.currentTimeMillis() + REFRESH_TOKEN_EXPIRY;
 		responseHeaders.add("Authorization", "Bearer " + tokenService.generateAccessToken(requestUser, accessExpirationTime));
 		responseHeaders.add("Refresh-Token", tokenService.generateRefreshToken(requestUser, refreshExpirationTime));
