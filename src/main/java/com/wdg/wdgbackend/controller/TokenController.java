@@ -1,5 +1,6 @@
 package com.wdg.wdgbackend.controller;
 
+import java.util.Optional;
 import com.wdg.wdgbackend.controller.service.TokenService;
 import com.wdg.wdgbackend.controller.util.MyJSON;
 import com.wdg.wdgbackend.model.entity.User;
@@ -16,13 +17,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
 
 @Slf4j
 @RestController
 public class TokenController {
-
-    private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 10; // 10분
 
     private final TokenService tokenService;
 
@@ -91,7 +89,7 @@ public class TokenController {
             Optional<User> requestUser = tokenService.validateToken(refreshToken);
             if (requestUser.isPresent()) {
                 HttpHeaders responseHeaders = new HttpHeaders();
-                long systemTime = System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY;
+                long systemTime = System.currentTimeMillis() + 1000L * 60 * 10; // 10분
                 responseHeaders.add("Authorization", "Bearer " + tokenService.generateAccessToken(requestUser.get(), systemTime));
                 responseHeaders.add("Access-Expiration-Time", String.valueOf(systemTime));
                 return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
