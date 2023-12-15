@@ -5,6 +5,7 @@ import com.wdg.wdgbackend.controller.util.CustomException;
 import com.wdg.wdgbackend.model.entity.Story;
 import com.wdg.wdgbackend.model.repository.StoryRepository;
 import com.wdg.wdgbackend.model.repository.UserRepository;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,20 +14,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Slf4j
 @Service
 public class StoryService {
 
 	private final StoryRepository storyRepository;
+	private final UserRepository userRepository;
 	private final UserInfoService userInfoService;
 	private final TokenService tokenService;
 	private final StoryLikeCommonService storyLikeCommonService;
 
 	@Autowired
-	public StoryService(StoryRepository storyRepository, UserInfoService userInfoService, TokenService tokenService, StoryLikeCommonService storyLikeCommonService) {
+	public StoryService(StoryRepository storyRepository, UserRepository userRepository, UserInfoService userInfoService, TokenService tokenService, StoryLikeCommonService storyLikeCommonService) {
 		this.storyRepository = storyRepository;
+		this.userRepository = userRepository;
 		this.userInfoService = userInfoService;
 		this.tokenService = tokenService;
 		this.storyLikeCommonService = storyLikeCommonService;
@@ -35,7 +36,7 @@ public class StoryService {
 	@Transactional
 	public void insertNewStory(String authorizationHeader, JsonNode rootNode) {
 		try {
-			Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+			long userId = tokenService.getIdFromAccessToken(authorizationHeader);
 			String nickname = tokenService.getNicknameFromAccessToken(authorizationHeader);
 
 			String story = rootNode.get("content").asText();
@@ -72,10 +73,10 @@ public class StoryService {
 	}
 
 	@Transactional
-	public void deleteStory(String authorizationHeader, String storyId) {
+	public void deleteAStory(String authorizationHeader, String storyId) {
 		try {
-			Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
-			Long storyIdL = Long.parseLong(storyId);
+			long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+			long storyIdL = Long.parseLong(storyId);
 
 			userInfoService.decrementStoryNum(userId);
 			storyLikeCommonService.deleteStoryLikes(storyIdL);
@@ -86,6 +87,23 @@ public class StoryService {
 		} catch (IllegalArgumentException e) {
 			log.error("적절하지 않은 storyId");
 			throw new CustomException("Error occurred while deleting a story", e, HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Transactional
+	public void deleteStoryConnectedNums(long userId, long storyId) {
+
+		try {
+			int storyLikeNum = storyRepository.getStoryLikeNum(storyId);
+
+			userRepository.lockUserLikeNum(userId);
+			userRepository.decrementLikeNumWhenStoryDeleted(storyLikeNum, userId);
+
+			userRepository.lockUserStoryNum(userId);
+			userRepository.decrementStoryNum(userId);
+		} catch (DataAccessException e) {
+			log.error("story 삭제 중 데이터베이스 에러 발생", e);
+			throw new CustomException("Database error occurred while deleting a story", e, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

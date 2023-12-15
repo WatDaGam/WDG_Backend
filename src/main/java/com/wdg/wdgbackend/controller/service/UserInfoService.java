@@ -27,7 +27,7 @@ public class UserInfoService {
 
 	public String makeUserJSONObject(String authorizationHeader) {
 		try {
-			Long userId = tokenServcie.getIdFromAccessToken(authorizationHeader);
+			long userId = tokenServcie.getIdFromAccessToken(authorizationHeader);
 			User user = userRepository.findUserById(userId);
 
 			if (user == null) {
@@ -39,11 +39,8 @@ public class UserInfoService {
 			userJson.put("storyNum", user.getStoryNum());
 			userJson.put("likeNum", user.getLikeNum());
 			userJson.put("createdAt", user.getCreatedAt());
-
-			if (user.getReportedStories() != null && !user.getReportedStories().isEmpty()) {
-				userJson.put("reportedStories", new JSONArray(user.getReportedStories()));
-				userRepository.clearReportedStories(userId);
-			}
+			userJson.put("reportedStoryNum", user.getReportedStoryNum());
+			userRepository.clearReportedStoryNum(userId);
 
 			return userJson.toString();
 		} catch (DataAccessException e) {
@@ -55,19 +52,19 @@ public class UserInfoService {
 		}
 	}
 
-	public void incrementStoryNum(Long userId) throws DataAccessException {
+	public void incrementStoryNum(long userId) throws DataAccessException {
 		userRepository.incrementStoryNum(userId);
 	}
 
-	public void decrementStoryNum(Long userId) throws DataAccessException {
+	public void decrementStoryNum(long userId) throws DataAccessException {
 		userRepository.decrementStoryNum(userId);
 	}
 
-	public void lockUserLikeNum(Long writerId) throws DataAccessException {
+	public void lockUserLikeNum(long writerId) throws DataAccessException {
 		userRepository.lockUserLikeNum(writerId);
 	}
 
-	public void incrementLikeNum(Long writerId) throws DataAccessException {
+	public void incrementLikeNum(long writerId) throws DataAccessException {
 		userRepository.incrementLikeNum(writerId);
 	}
 }

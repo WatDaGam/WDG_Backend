@@ -15,7 +15,7 @@ public class ReportRepositoryImpl implements ReportRepository {
 	}
 
 	@Override
-	public void reportStory(Long userId, Long storyId) {
+	public void reportStory(long userId, long storyId) {
 		reportMapper.reportStory(storyId);
 //		reportMapper.insertReport(userId, storyId);
 
@@ -24,32 +24,32 @@ public class ReportRepositoryImpl implements ReportRepository {
 	}
 
 	@Override
-	public void addReportedStoryToUser(String newStory, Long userId) {
+	public void addReportedStoryToUser(String newStory, long userId) {
 		reportMapper.addReportedStoryToUser(newStory, userId);
 	}
 
 	@Override
-	public boolean isReported(Long userId, Long storyId) {
+	public boolean isReported(long userId, long storyId) {
 		return reportMapper.isReported(userId, storyId);
 	}
 
 	@Override
-	public Integer getReportNum(Long storyId) {
+	public Integer getReportNum(long storyId) {
 		return reportMapper.getReportNum(storyId);
 	}
 
 	@Override
-	public Integer lockStoryReportNum(Long storyId) {
+	public Integer lockStoryReportNum(long storyId) {
 		return reportMapper.lockStoryReportNum(storyId);
 	}
 
 	@Override
-	public void deleteReports(Long storyId) {
+	public void deleteReports(long storyId) {
 		reportMapper.deleteReports(storyId);
 	}
 
 	@Override
-	public void deleteUserReports(Long userId) {
+	public void deleteUserReports(long userId) {
 		reportMapper.deleteUserReports(userId);
 	}
 }

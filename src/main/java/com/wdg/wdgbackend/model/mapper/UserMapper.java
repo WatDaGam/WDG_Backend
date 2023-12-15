@@ -13,7 +13,7 @@ public interface UserMapper {
 	int checkNicknameDup(String nickname);
 
 	@Select("SELECT COUNT(*) FROM user WHERE id = #{userId}")
-	int isUserExists(Long userId);
+	int isUserExists(long userId);
 
 	@Select("SELECT CASE WHEN nickname IS NULL THEN 0 ELSE 1 END FROM user WHERE snsId = #{snsId}")
 	int checkNicknameIsNull(long snsId);
@@ -27,36 +27,45 @@ public interface UserMapper {
 	void insert(User user);
 
 	@Select("SELECT * FROM user WHERE id = #{userId}")
-	User findUserById(Long userId);
+	User findUserById(long userId);
 
 	@Select("SELECT * FROM user WHERE snsId = #{snsId}")
-	User findUserBySnsId(Long snsId);
+	User findUserBySnsId(long snsId);
 
 	@Update("UPDATE user SET nickname = #{nickname} WHERE id = #{userId}")
-	void updateNicknameById(Long userId, String nickname);
+	void updateNicknameById(long userId, String nickname);
 
 	@Update("UPDATE user SET storyNum = storyNum + 1 WHERE id = #{userId}")
-	void incrementStoryNum(Long userId);
+	void incrementStoryNum(long userId);
 
 	@Update("UPDATE user SET storyNum = storyNum - 1 WHERE id = #{userId}")
-	void decrementStoryNum(Long userId);
+	void decrementStoryNum(long userId);
 
 	@Update("UPDATE user SET likeNum = likeNum + 1 WHERE id = #{userId}")
-	void incrementLikeNum(Long userId);
+	void incrementLikeNum(long userId);
 
 	@Update("UPDATE user SET likeNum = likeNum - 1 WHERE id = #{userId}")
-	void decrementLikeNum(Long userId);
+	void decrementLikeNum(long userId);
 
-	@Update("UPDATE user SET reportedStories = NULL WHERE id = #{userId}")
-	void clearReportedStories(Long userId);
+	@Update("UPDATE user SET likeNum = likeNum - #{storyLikeNum} WHERE id = #{userId}")
+	void decrementLikeNumWhenStoryDeleted(long storyLikeNum, long userId);
+
+	@Update("UPDATE user SET reportedStoryNum = reportedStoryNum + 1 WHERE id = #{userId}")
+	void incrementReportedStoryNum(long userId);
+
+	@Update("UPDATE user SET reportedStoryNum = 0 WHERE id = #{userId}")
+	void clearReportedStoryNum(long userId);
 
 	@Select("SELECT likeNum FROM user WHERE id = #{writerId} FOR UPDATE")
-	Integer lockUserLikeNum(Long writerId);
+	int lockUserLikeNum(long writerId);
+
+	@Select("SELECT storyNum FROM user WHERE id = #{userId} FOR UPDATE")
+	int lockUserStoryNum(long userId);
 
 	@Update("UPDATE user SET isActive = FALSE WHERE id = #{userId}")
-	void deactivateUserById(Long userId);
+	void deactivateUserById(long userId);
 
 	@Delete("DELETE FROM user WHERE id = #{userId}")
-	void deleteUserById(Long userId);
+	void deleteUserById(long userId);
 
 }

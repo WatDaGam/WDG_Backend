@@ -68,16 +68,15 @@ public class TokenService {
 				.compact();
 	}
 
-	public Long getIdFromAccessToken(String authorizationHeader) throws CustomException {
-		Long id = Long.parseLong(getClaims(authorizationHeader).get("id").toString());
-		return id;
+	public long getIdFromAccessToken(String authorizationHeader) throws CustomException {
+		return Long.parseLong(getClaims(authorizationHeader).get("id").toString());
 	}
 
 	public String getNicknameFromAccessToken(String authorizationHeader) throws CustomException {
 		return getClaims(authorizationHeader).get("nickname").toString();
 	}
 
-	public Long getSnsIdFromAccessToken(String authorizationHeader) throws CustomException {
+	public long getSnsIdFromAccessToken(String authorizationHeader) throws CustomException {
 		return Long.parseLong(getClaims(authorizationHeader).get("snsId").toString());
 	}
 
@@ -100,7 +99,7 @@ public class TokenService {
 
 			if (expiration.before(new Date())) return Optional.empty();
 
-			Long snsId = claims.get("snsId", Long.class);
+			long snsId = claims.get("snsId", Long.class);
 			return Optional.ofNullable(userRepository.findUserBySnsId(snsId));
 		} catch (JwtException e) {
 			log.error("토큰 검증 과정 중 JWT 에러 발생", e);

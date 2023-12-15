@@ -2,11 +2,11 @@ package com.wdg.wdgbackend.model.repository;
 
 
 public interface ReportRepository {
-	void reportStory(Long userId, Long storyId);
-	void addReportedStoryToUser(String newStory, Long userId);
-	boolean isReported(Long userId, Long storyId);
-	Integer getReportNum(Long storyId);
-	Integer lockStoryReportNum(Long storyId);
-	void deleteReports(Long storyId);
-	void deleteUserReports(Long userId);
+	void reportStory(long userId, long storyId);
+	void addReportedStoryToUser(String newStory, long userId);
+	boolean isReported(long userId, long storyId);
+	Integer getReportNum(long storyId);
+	Integer lockStoryReportNum(long storyId);
+	void deleteReports(long storyId);
+	void deleteUserReports(long userId);
 }

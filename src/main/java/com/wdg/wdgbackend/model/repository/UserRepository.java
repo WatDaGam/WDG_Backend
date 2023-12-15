@@ -7,20 +7,23 @@ public interface UserRepository {
 	boolean findSnsId(long snsId);
 	boolean isNicknameDup(String nickname);
 	boolean isNicknameNull(long snsId);
-	boolean isNicknameNullWithId(Long userId);
-	boolean isUserExists(Long userId);
+	boolean isNicknameNullWithId(long userId);
+	boolean isUserExists(long userId);
 	void insertUser(User user);
 
-	User findUserById(Long userId);
-	User findUserBySnsId(Long snsId);
+	User findUserById(long userId);
+	User findUserBySnsId(long snsId);
 
-	void incrementStoryNum(Long userId);
-	void decrementStoryNum(Long userId);
-	void incrementLikeNum(Long writerId);
-	void decrementLikeNum(Long userId);
-	void clearReportedStories(Long userId);
-	Integer lockUserLikeNum(Long writerId);
-	void updateNicknameById(Long userId, String nickname);
-	void deactivateUserById(Long userId);
-	void deleteUserById(Long userId);
+	void incrementStoryNum(long userId);
+	void decrementStoryNum(long userId);
+	void incrementLikeNum(long writerId);
+	void decrementLikeNum(long userId);
+	void decrementLikeNumWhenStoryDeleted(long storyLikeNum, long userId);
+	void incrementReportedStoryNum(long userId);
+	void clearReportedStoryNum(long userId);
+	int lockUserLikeNum(long writerId);
+	int lockUserStoryNum(long userId);
+	void updateNicknameById(long userId, String nickname);
+	void deactivateUserById(long userId);
+	void deleteUserById(long userId);
 }

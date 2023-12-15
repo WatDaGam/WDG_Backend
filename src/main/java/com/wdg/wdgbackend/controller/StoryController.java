@@ -194,7 +194,7 @@ public class StoryController {
 			return new ResponseEntity<>(MyJSON.message("Invalid Authorization Header"), HttpStatus.BAD_REQUEST);
 		}
 		try {
-			storyService.deleteStory(authorizationHeader, storyId);
+			storyService.deleteAStory(authorizationHeader, storyId);
 			return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(MyJSON.message(e.getMessage()), HttpStatus.BAD_REQUEST);

@@ -19,7 +19,7 @@ public class NicknameService {
 		return userRepository.isNicknameDup(nickname);
 	}
 
-	public void setNickname(Long userId, String nickname) throws DataAccessException {
+	public void setNickname(long userId, String nickname) throws DataAccessException {
 		userRepository.updateNicknameById(userId, nickname);
 	}
 }
