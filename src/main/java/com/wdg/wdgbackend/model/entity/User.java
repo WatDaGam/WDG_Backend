@@ -4,29 +4,21 @@ import java.util.List;
 
 public class User {
 
-	private Long id;
-	private Long snsId;
-	private Integer platform;
+	private long id;
+	private long snsId;
+	private int platform;
 	private String nickname;
-	private Long createdAt;
+	private long createdAt;
 	private int storyNum;
 	private int likeNum;
-	private List<String> reportedStories;
-	private Boolean isActive;
+	private int reportedStoryNum;
+	private boolean isActive;
 
-	public User(Long id, Long snsId, Integer platform, Long createdAt) {
+	public User(long id, long snsId, int platform, long createdAt) {
 		this.id = id;
 		this.snsId = snsId;
 		this.platform = platform;
 		this.createdAt = createdAt;
-	}
-
-	public List<String> getReportedStories() {
-		return reportedStories;
-	}
-
-	public void setReportedStories(List<String> reportedStories) {
-		this.reportedStories = reportedStories;
 	}
 
 	public int getStoryNum() {
@@ -45,35 +37,35 @@ public class User {
 		this.likeNum = likeNum;
 	}
 
-	public Long getCreatedAt() {
+	public long getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Long createdAt) {
+	public void setCreatedAt(long createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public Boolean getActive() {
+	public boolean getActive() {
 		return isActive;
 	}
 
-	public void setActive(Boolean active) {
+	public void setActive(boolean active) {
 		isActive = active;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public Long getSnsId() {
+	public long getSnsId() {
 		return snsId;
 	}
 
-	public void setSnsId(Long snsId) {
+	public void setSnsId(long snsId) {
 		this.snsId = snsId;
 	}
 
@@ -85,11 +77,19 @@ public class User {
 		this.nickname = nickname;
 	}
 
-	public Integer getPlatform() {
+	public int getPlatform() {
 		return platform;
 	}
 
-	public void setPlatform(Integer platform) {
+	public void setPlatform(int platform) {
 		this.platform = platform;
+	}
+
+	public int getReportedStoryNum() {
+		return reportedStoryNum;
+	}
+
+	public void setReportedStoryNum(int reportedStoryNum) {
+		this.reportedStoryNum = reportedStoryNum;
 	}
 }

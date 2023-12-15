@@ -15,27 +15,27 @@ public class LikeRepositoryImpl implements LikeRepository {
     }
 
     @Override
-    public void linkUserAndStory(Long userId, Long storyId) {
+    public void linkUserAndStory(long userId, long storyId) {
         likeMapper.insertLikeNULLUser(userId, storyId);
     }
 
     @Override
-    public void linkUserAndStory(Long userId, Long storyId, Long writerId) {
+    public void linkUserAndStory(long userId, long storyId, long writerId) {
         likeMapper.insertLike(userId, storyId, writerId);
     }
 
     @Override
-    public boolean isLiked(Long userId, Long storyId) {
+    public boolean isLiked(long userId, long storyId) {
         return likeMapper.isLiked(userId, storyId);
     }
 
     @Override
-    public void deleteStoryLikes(Long storyId) {
+    public void deleteStoryLikes(long storyId) {
         likeMapper.deleteStoryLikes(storyId);
     }
 
     @Override
-    public void deleteUserLikes(Long userId) {
+    public void deleteUserLikes(long userId) {
         likeMapper.deleteUserLikes(userId);
     }
 }

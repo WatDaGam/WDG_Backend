@@ -1,20 +1,18 @@
 package com.wdg.wdgbackend.model.entity;
 
-import java.sql.Timestamp;
-
 public class Story {
 
-	private Long id;
-	private Long userId;
+	private long id;
+	private long userId;
 	private String nickname;
 	private String content;
-	private Integer likeNum;
-	private Long createdAt;
-	private Double lati;
-	private Double longi;
-	private Integer reportNum;
+	private int likeNum;
+	private long createdAt;
+	private double lati;
+	private double longi;
+	private int reportNum;
 
-	public Story(Long id, Long userId, String nickname, String content, Integer likeNum, Double lati, Double longi, Long createdAt) {
+	public Story(long id, long userId, String nickname, String content, int likeNum, double lati, double longi, long createdAt) {
 		this.id = id;
 		this.userId = userId;
 		this.nickname = nickname;
@@ -25,19 +23,19 @@ public class Story {
 		this.createdAt = createdAt;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public Long getUserId() {
+	public long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 
@@ -57,43 +55,43 @@ public class Story {
 		this.content = content;
 	}
 
-	public Integer getLikeNum() {
+	public int getLikeNum() {
 		return likeNum;
 	}
 
-	public void setLikeNum(Integer likeNum) {
+	public void setLikeNum(int likeNum) {
 		this.likeNum = likeNum;
 	}
 
-	public Double getLati() {
+	public double getLati() {
 		return lati;
 	}
 
-	public void setLati(Double lati) {
+	public void setLati(double lati) {
 		this.lati = lati;
 	}
 
-	public Double getLongi() {
+	public double getlongi() {
 		return longi;
 	}
 
-	public void setLongi(Double longi) {
+	public void setlongi(double longi) {
 		this.longi = longi;
 	}
 
-	public Long getCreatedAt() {
+	public long getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Long createdAt) {
+	public void setCreatedAt(long createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public Integer getReportNum() {
+	public int getReportNum() {
 		return reportNum;
 	}
 
-	public void setReportNum(Integer reportNum) {
+	public void setReportNum(int reportNum) {
 		this.reportNum = reportNum;
 	}
 }

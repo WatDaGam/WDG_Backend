@@ -26,8 +26,8 @@ public class ReportController {
 		}
 
 		try {
-			reportService.reportNumUpdate(authorizationHeader, storyId);
-			return new ResponseEntity<>(MyJSON.message("Reported Successfully"), HttpStatus.OK);
+			int statusCode = reportService.reportNumUpdate(authorizationHeader, storyId);
+			return new ResponseEntity<>(MyJSON.message("Reported Successfully"), HttpStatus.valueOf(statusCode));
 		} catch (CustomException e) {
 			return new ResponseEntity<>(MyJSON.message(e.getMessage()), e.getStatus());
 		}

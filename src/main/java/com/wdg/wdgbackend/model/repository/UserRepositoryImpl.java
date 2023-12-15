@@ -31,12 +31,12 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public boolean isNicknameNullWithId(Long userId) {
+	public boolean isNicknameNullWithId(long userId) {
 		return userMapper.checkNicknameIsNullWithId(userId) == 0;
 	}
 
 	@Override
-	public boolean isUserExists(Long userId) {
+	public boolean isUserExists(long userId) {
 		return userMapper.isUserExists(userId) == 1;
 	}
 
@@ -46,57 +46,72 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public User findUserById(Long userId) {
+	public User findUserById(long userId) {
 		return userMapper.findUserById(userId);
 	}
 
 	@Override
-	public User findUserBySnsId(Long snsId) {
+	public User findUserBySnsId(long snsId) {
 		return userMapper.findUserBySnsId(snsId);
 	}
 
 	@Override
-	public void incrementStoryNum(Long userId) {
+	public void incrementStoryNum(long userId) {
 		userMapper.incrementStoryNum(userId);
 	}
 
 	@Override
-	public void decrementStoryNum(Long userId) {
+	public void decrementStoryNum(long userId) {
 		userMapper.decrementStoryNum(userId);
 	}
 
 	@Override
-	public void incrementLikeNum(Long writerId) {
+	public void incrementLikeNum(long writerId) {
 		userMapper.incrementLikeNum(writerId);
 	}
 
 	@Override
-	public void decrementLikeNum(Long userId) {
+	public void decrementLikeNum(long userId) {
 		userMapper.decrementLikeNum(userId);
 	}
 
 	@Override
-	public void clearReportedStories(Long userId) {
-		userMapper.clearReportedStories(userId);
+	public void decrementLikeNumWhenStoryDeleted(long storyLikeNum, long userId) {
+		userMapper.decrementLikeNumWhenStoryDeleted(storyLikeNum, userId);
 	}
 
 	@Override
-	public Integer lockUserLikeNum(Long writerId) {
+	public void incrementReportedStoryNum(long userId) {
+		userMapper.incrementReportedStoryNum(userId);
+	}
+
+	@Override
+	public void clearReportedStoryNum(long userId) {
+		userMapper.clearReportedStoryNum(userId);
+	}
+
+	@Override
+	public int lockUserLikeNum(long writerId) {
 		return userMapper.lockUserLikeNum(writerId);
 	}
 
 	@Override
-	public void updateNicknameById(Long userId, String nickname) {
+	public int lockUserStoryNum(long userId) {
+		return userMapper.lockUserStoryNum(userId);
+	}
+
+	@Override
+	public void updateNicknameById(long userId, String nickname) {
 		userMapper.updateNicknameById(userId, nickname);
 	}
 
 	@Override
-	public void deactivateUserById(Long userId) {
+	public void deactivateUserById(long userId) {
 		userMapper.deactivateUserById(userId);
 	}
 
 	@Override
-	public void deleteUserById(Long userId) {
+	public void deleteUserById(long userId) {
 		userMapper.deleteUserById(userId);
 	}
 }

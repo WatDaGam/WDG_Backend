@@ -13,31 +13,31 @@ public interface StoryMapper {
 	void insert(Story story);
 
 	@Update("UPDATE story SET likeNum = likeNum + 1 WHERE id = #{storyId}")
-	void likePlus(Long storyId);
+	void likePlus(long storyId);
 
 	@Update("UPDATE story SET likeNum = likeNum - 1 WHERE id = #{storyId}")
-	void likeMinus(Long storyId);
+	void likeMinus(long storyId);
 
 	@Select("SELECT content FROM story WHERE id = #{storyId}")
-	String getContent(Long storyId);
+	String getContent(long storyId);
 
 	@Select("SELECT userId FROM story WHERE id = #{storyId}")
-	Long getUserIdFromStory(Long storyId);
+	long getUserIdFromStory(long storyId);
 
 	@Select("SELECT likeNum FROM story WHERE id = #{storyId} FOR UPDATE")
-	Integer lockStoryLikeNum(Long storyId);
+	Integer lockStoryLikeNum(long storyId);
 
 	@Select("SELECT id, userId, nickname, content, likeNum, createdAt ,lati, longi, reportNum from story WHERE id = #{storyId}")
-	Story getStory(Long storyId);
+	Story getStory(long storyId);
 
 	@Select("SELECT likeNum from story WHERE id = #{storyId}")
-	Integer getStoryLikeNum(Long storyId);
+	Integer getStoryLikeNum(long storyId);
 
 	@Select("SELECT id, userId, nickname, content, likeNum, createdAt ,lati, longi FROM story " +
 			"WHERE userId = #{userId} " +
 			"ORDER BY createdAt ASC")
-	List<Story> getStoryByUserId(Long userId);
+	List<Story> getStoryByUserId(long userId);
 
 	@Delete("DELETE FROM story WHERE id = #{storyId}")
-	void delete(Long storyId);
+	void delete(long storyId);
 }

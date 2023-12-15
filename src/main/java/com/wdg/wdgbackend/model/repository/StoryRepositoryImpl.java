@@ -24,47 +24,47 @@ public class StoryRepositoryImpl implements StoryRepository{
 	}
 
 	@Override
-	public void likePlus(Long storyId) {
+	public void likePlus(long storyId) {
 		storyMapper.likePlus(storyId);
 	}
 
 	@Override
-	public void likeMinus(Long storyId) {
+	public void likeMinus(long storyId) {
 		storyMapper.likeMinus(storyId);
 	}
 
 	@Override
-	public Optional<Long> getUserIdFromStory(Long storyId) {
-		return Optional.ofNullable(storyMapper.getUserIdFromStory(storyId));
+	public Optional<Long> getUserIdFromStory(long storyId) {
+		return Optional.of(storyMapper.getUserIdFromStory(storyId));
 	}
 
 	@Override
-	public String getContent(Long storyId) {
+	public String getContent(long storyId) {
 		return storyMapper.getContent(storyId);
 	}
 
 	@Override
-	public Integer getStoryLikeNum(Long storyId) {
+	public int getStoryLikeNum(long storyId) {
 		return storyMapper.getStoryLikeNum(storyId);
 	}
 
 	@Override
-	public Integer lockStoryLikeNum(Long storyId) {
+	public int lockStoryLikeNum(long storyId) {
 		return storyMapper.lockStoryLikeNum(storyId);
 	}
 
 	@Override
-	public Story getStory(Long storyId) {
+	public Story getStory(long storyId) {
 		return storyMapper.getStory(storyId);
 	}
 
 	@Override
-	public List<Story> getStoryByUserId(Long userId) {
+	public List<Story> getStoryByUserId(long userId) {
 		return storyMapper.getStoryByUserId(userId);
 	}
 
 	@Override
-	public void deleteStory(Long storyId) {
+	public void deleteStory(long storyId) {
 		storyMapper.delete(storyId);
 	}
 }

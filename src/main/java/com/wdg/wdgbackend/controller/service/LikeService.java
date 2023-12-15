@@ -35,14 +35,14 @@ public class LikeService {
     @Transactional
     public void likePlus(String authorizationHeader, String id) {
         try {
-            Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
-            Long storyId = Long.parseLong(id);
+            long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+            long storyId = Long.parseLong(id);
 
             Optional<Long> writerId = storyLikeCommonService.getUserIdFromStory(storyId);
 
             if (storyLikeCommonService.isLiked(userId, storyId)) return;
             if (writerId.isPresent() && userRepository.isUserExists(writerId.get())) {
-                Long realWriter = writerId.get();
+                long realWriter = writerId.get();
                 userInfoService.lockUserLikeNum(realWriter);
                 userInfoService.incrementLikeNum(realWriter);
                 likeRepository.linkUserAndStory(userId, storyId, writerId.get());
@@ -69,7 +69,7 @@ public class LikeService {
         return responseJSON;
     }
 
-    private Integer getStoryLikeNum(Long storyId) {
+    private Integer getStoryLikeNum(long storyId) {
         return storyLikeCommonService.getStoryLikeNum(storyId);
     }
 }

@@ -9,18 +9,18 @@ import org.apache.ibatis.annotations.Select;
 public interface LikeMapper {
 
     @Insert("INSERT INTO likes (userId, storyId) VALUES (#{userId}, #{storyId})")
-    void insertLikeNULLUser(Long userId, Long storyId);
+    void insertLikeNULLUser(long userId, long storyId);
 
     @Insert("INSERT INTO likes (userId, storyId, writerId) VALUES (#{userId}, #{storyId}, #{writerId})")
-    void insertLike(Long userId, Long storyId, Long writerId);
+    void insertLike(long userId, long storyId, long writerId);
 
 
     @Select("SELECT EXISTS (SELECT 1 FROM likes WHERE userId = #{userId} AND storyId = #{storyId})")
-    boolean isLiked(Long userId, Long storyId);
+    boolean isLiked(long userId, long storyId);
 
     @Delete("DELETE FROM likes WHERE storyId = #{storyId}")
-    void deleteStoryLikes(Long storyId);
+    void deleteStoryLikes(long storyId);
 
     @Delete("DELETE FROM likes WHERE userId = #{userId}")
-    void deleteUserLikes(Long userId);
+    void deleteUserLikes(long userId);
 }

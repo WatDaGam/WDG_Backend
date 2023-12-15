@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface ReportMapper {
 	@Update("UPDATE story SET reportNum = reportNum + 1 WHERE id = #{storyId}")
-	void reportStory(Long storyId);
+	void reportStory(long storyId);
 
 	@Update("UPDATE user \n" +
 			"SET reportedStories = CASE \n" +
@@ -13,23 +13,23 @@ public interface ReportMapper {
 			"    ELSE JSON_ARRAY_APPEND(reportedStories, '$', #{newStory}) \n" +
 			"END \n" +
 			"WHERE id = #{userId}")
-	void addReportedStoryToUser(String newStory, Long userId);
+	void addReportedStoryToUser(String newStory, long userId);
 
 	@Select("SELECT EXISTS (SELECT 1 FROM reports WHERE userId = #{userId} AND storyId = #{storyId})")
-	boolean isReported(Long userId, Long storyId);
+	boolean isReported(long userId, long storyId);
 
 	@Insert("INSERT INTO reports (userId, storyId) VALUES (#{userId}, #{storyId})")
-	void insertReport(Long userId, Long storyId);
+	void insertReport(long userId, long storyId);
 
 	@Select("SELECT reportNum FROM story WHERE id = #{storyId}")
-	Integer getReportNum(Long storyId);
+	int getReportNum(long storyId);
 
 	@Select("SELECT reportNum FROM story WHERE id = #{storyId} FOR UPDATE")
-	Integer lockStoryReportNum(Long storyId);
+	int lockStoryReportNum(long storyId);
 
 	@Delete("DELETE FROM reports WHERE storyId = #{storyId}")
-	void deleteReports(Long storyId);
+	void deleteReports(long storyId);
 
 	@Delete("DELETE FROM reports WHERE userId = #{userId}")
-	void deleteUserReports(Long userId);
+	void deleteUserReports(long userId);
 }
