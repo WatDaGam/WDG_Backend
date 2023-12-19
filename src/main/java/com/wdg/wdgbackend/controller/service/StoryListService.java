@@ -47,6 +47,7 @@ public class StoryListService {
 		JSONObject response = new JSONObject();
 
 		response.put("stories", new JSONArray(storyList));
+		System.out.println("response = " + response);
 		return response;
 	}
 }
