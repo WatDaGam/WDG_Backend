@@ -22,7 +22,7 @@ public interface StoryMapper {
 	String getContent(long storyId);
 
 	@Select("SELECT userId FROM story WHERE id = #{storyId}")
-	long getUserIdFromStory(long storyId);
+	Long getUserIdFromStory(long storyId);
 
 	@Select("SELECT likeNum FROM story WHERE id = #{storyId} FOR UPDATE")
 	Integer lockStoryLikeNum(long storyId);

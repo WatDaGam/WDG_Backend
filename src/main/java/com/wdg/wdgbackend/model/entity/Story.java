@@ -3,7 +3,7 @@ package com.wdg.wdgbackend.model.entity;
 public class Story {
 
 	private long id;
-	private long userId;
+	private Long userId;
 	private String nickname;
 	private String content;
 	private int likeNum;
@@ -12,7 +12,7 @@ public class Story {
 	private double longi;
 	private int reportNum;
 
-	public Story(long id, long userId, String nickname, String content, int likeNum, double lati, double longi, long createdAt) {
+	public Story(long id, Long userId, String nickname, String content, int likeNum, double lati, double longi, long createdAt) {
 		this.id = id;
 		this.userId = userId;
 		this.nickname = nickname;
@@ -31,11 +31,11 @@ public class Story {
 		this.id = id;
 	}
 
-	public long getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(long userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
@@ -71,11 +71,11 @@ public class Story {
 		this.lati = lati;
 	}
 
-	public double getlongi() {
+	public double getLongi() {
 		return longi;
 	}
 
-	public void setlongi(double longi) {
+	public void setLongi(double longi) {
 		this.longi = longi;
 	}
 

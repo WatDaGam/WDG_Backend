@@ -10,10 +10,10 @@ import java.util.List;
 @Mapper
 public interface StoryListMapper {
 	@Select("SELECT id, userId, nickname, content, likeNum, createdAt, lati, longi, reportNum FROM story " +
-			"ORDER BY ST_Distance_Sphere(location, POINT(#{longitude}, #{latitude})) ASC " +
+			"ORDER BY ST_Distance_Sphere(location, POINT(#{longi}, #{lati})) ASC " +
 			"LIMIT #{limit}")
 	List<Story> selectNearestStories(
-			double latitude,
-			double longitude
+			double lati,
+			double longi
 			,int limit);
 }
