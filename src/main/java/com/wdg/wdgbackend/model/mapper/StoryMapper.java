@@ -13,10 +13,13 @@ public interface StoryMapper {
 	void insert(Story story);
 
 	@Update("UPDATE story SET likeNum = likeNum + 1 WHERE id = #{storyId}")
-	void likePlus(long storyId);
+	void incrementStoryLikeNum(long storyId);
 
 	@Update("UPDATE story SET likeNum = likeNum - 1 WHERE id = #{storyId}")
 	void likeMinus(long storyId);
+
+	@Update("UPDATE story SET reportNum = reportNum + 1 WHERE id = #{storyId}")
+	void increaseReportNum(long storyId);
 
 	@Select("SELECT content FROM story WHERE id = #{storyId}")
 	String getContent(long storyId);
@@ -26,6 +29,9 @@ public interface StoryMapper {
 
 	@Select("SELECT likeNum FROM story WHERE id = #{storyId} FOR UPDATE")
 	Integer lockStoryLikeNum(long storyId);
+
+	@Select("SELECT reportNum FROM story WHERE id = #{storyId} FOR UPDATE")
+	int lockStoryReportNum(long storyId);
 
 	@Select("SELECT id, userId, nickname, content, likeNum, createdAt ,lati, longi, reportNum from story WHERE id = #{storyId}")
 	Story getStory(long storyId);
@@ -40,4 +46,7 @@ public interface StoryMapper {
 
 	@Delete("DELETE FROM story WHERE id = #{storyId}")
 	void delete(long storyId);
+
+	@Delete("DELETE FROM story WHERE userId = #{userId}")
+	void deleteStoryWithUserId(long userId);
 }

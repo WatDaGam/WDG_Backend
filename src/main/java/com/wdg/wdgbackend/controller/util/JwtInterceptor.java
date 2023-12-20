@@ -10,6 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -17,6 +18,10 @@ import java.util.*;
 @Slf4j
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
 
     private final TokenService tokenService;
 
@@ -27,46 +32,52 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String clientIp = request.getHeader("X-Forwarded-For");
-        if (clientIp == null) clientIp = request.getRemoteAddr();
+        String clientIp = getClientIp(request);
         String path = request.getServletPath();
-
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedNow = now.format(formatter);
-
-        log.info("Time: {}, Client IP = {}, path = {}", formattedNow, clientIp, path);
+        logRequestDetails(clientIp, path);
 
         if (!AllowedPaths.isAllowed(path)) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Hello");
-            return false;
+            return makeResponse(response, HttpServletResponse.SC_NOT_FOUND, "Hello");
         }
 
-        String header = request.getHeader("Authorization");
-        String token = null;
-
-        if (header != null && header.startsWith("Bearer ")) {
-            token = header.substring(7);
+        String token = extractToken(request.getHeader(AUTHORIZATION_HEADER));
+        if (token == null) {
+            return makeResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "No Authorization token provided");
         }
 
+        return validateTokenAndRespond(token, response);
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String clientIp = request.getHeader("X-Forwarded-For");
+        return (clientIp != null) ? clientIp : request.getRemoteAddr();
+    }
+
+    private void logRequestDetails(String clientIp, String path) {
+        if (log.isInfoEnabled()) {
+            String formattedNow = LocalDateTime.now().format(FORMATTER);
+            log.info("Time: {}, Client IP = {}, path = {}", formattedNow, clientIp, path);
+        }
+    }
+
+    private String extractToken(String header) {
+        return (header != null && header.startsWith(BEARER_PREFIX)) ? header.substring(BEARER_PREFIX.length()) : null;
+    }
+
+    private boolean validateTokenAndRespond(String token, HttpServletResponse response) throws IOException {
         try {
             Optional<User> user = tokenService.validateToken(token);
-
-            if (user.isPresent()) {
-                return true;
-            } else {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("{\"error\":\"Unauthorized - Invalid Token\"}");
-                return false;
-            }
+            return user.isPresent() || makeResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized - Invalid Token");
         } catch (JwtException | IllegalArgumentException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"error\":\"Invalid token format\"}");
-            return false;
+            return makeResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid token format");
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"Internal server error\"}");
-            return false;
+            return makeResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal server error");
         }
+    }
+
+    private static boolean makeResponse(HttpServletResponse response, int statusCode, String msg) throws IOException {
+        response.setStatus(statusCode);
+        response.getWriter().write("{\"error\":\"" + msg + "\"}");
+        return false;
     }
 }

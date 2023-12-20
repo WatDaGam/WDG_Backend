@@ -24,8 +24,8 @@ public class StoryRepositoryImpl implements StoryRepository{
 	}
 
 	@Override
-	public void likePlus(long storyId) {
-		storyMapper.likePlus(storyId);
+	public void incrementStoryLikeNum(long storyId) {
+		storyMapper.incrementStoryLikeNum(storyId);
 	}
 
 	@Override
@@ -66,5 +66,10 @@ public class StoryRepositoryImpl implements StoryRepository{
 	@Override
 	public void deleteStory(long storyId) {
 		storyMapper.delete(storyId);
+	}
+
+	@Override
+	public void deleteStoryWithUserId(long userId) {
+		storyMapper.deleteStoryWithUserId(userId);
 	}
 }

@@ -1,5 +1,9 @@
 package com.wdg.wdgbackend.controller.util;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public enum AllowedPaths {
 	LOGIN("/login"),
 	MY_STORY("/myStory"),
@@ -25,12 +29,15 @@ public enum AllowedPaths {
 		return path;
 	}
 
+	private static final Set<String> ALLOWED_PATHS_SET = new HashSet<>();
+
+	static {
+		Arrays.stream(AllowedPaths.values())
+				.map(AllowedPaths::getPath)
+				.forEach(ALLOWED_PATHS_SET::add);
+	}
+
 	public static boolean isAllowed(String path) {
-		for (AllowedPaths allowedPath : values()) {
-			if (allowedPath.getPath().equals(path)) {
-				return true;
-			}
-		}
-		return false;
+		return ALLOWED_PATHS_SET.contains(path);
 	}
 }

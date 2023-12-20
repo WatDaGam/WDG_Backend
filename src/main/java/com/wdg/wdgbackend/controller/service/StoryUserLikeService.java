@@ -6,23 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
-public class StoryLikeCommonService {
+public class StoryUserLikeService {
 
     private final StoryRepository storyRepository;
     private final LikeRepository likeRepository;
 
     @Autowired
-    public StoryLikeCommonService(StoryRepository storyRepository, LikeRepository likeRepository) {
+    public StoryUserLikeService(StoryRepository storyRepository, LikeRepository likeRepository) {
         this.storyRepository = storyRepository;
         this.likeRepository = likeRepository;
-    }
-
-    public void linkUserAndStory(long userId, long storyId, long writerId) throws DataAccessException {
-        likeRepository.linkUserAndStory(userId, storyId, writerId);
     }
 
     public boolean isLiked(long userId, long storyId) throws DataAccessException {
@@ -37,12 +32,9 @@ public class StoryLikeCommonService {
         likeRepository.deleteUserLikes(userId);
     }
 
-    public void lockStoryLike(long storyId) throws DataAccessException {
+    public void lockAndIncreaseLikeNum(long storyId) throws DataAccessException {
         storyRepository.lockStoryLikeNum(storyId);
-    }
-
-    public void likePlus(long storyId) throws DataAccessException {
-        storyRepository.likePlus(storyId);
+        storyRepository.incrementStoryLikeNum(storyId);
     }
 
     public Optional<Long> getUserIdFromStory(long storyId) throws DataAccessException {

@@ -37,6 +37,16 @@ public class ReportService {
 		this.storyService = storyService;
 	}
 
+	/**
+	 * 신고api반환값
+	 * 200 Ok -> 신고 성공, 메세지 삭제 안됨
+	 * 205 Reset Content -> 신고 성공, 메세지 삭제
+	 * 208 Already Reported -> 중복된 신고
+	 *
+	 * @param authorizationHeader
+	 * @param storyId
+	 * @return
+	 */
 	@Transactional
 	public int reportNumUpdate(String authorizationHeader, String storyId) {
 		try {
@@ -44,11 +54,17 @@ public class ReportService {
 			long storyIdL = Long.parseLong(storyId);
 
 			Optional<Story> story = Optional.ofNullable(storyRepository.getStory(storyIdL));
+
+			/*
+			 * 이미 글이 신고로 인해 삭제되었을 경우 205 반환
+			 */
 			if (story.isEmpty()) return 205;
 
-//			if (reportRepository.isReported(userId, storyIdL)) return;
+			/*
+			 * 이미 전에 해당 유저가 글을 삭제했을 경우 208 반환
+			 */
+			if (reportRepository.isReported(userId, storyIdL)) return 208;
 
-			reportRepository.lockStoryReportNum(storyIdL);
 			reportRepository.reportStory(userId, storyIdL);
 
 			if (reportRepository.getReportNum(storyIdL) == MAX_REPORT) {
