@@ -30,7 +30,7 @@ public class MyStoryService {
 
 	@Transactional
 	public JSONObject getStories(String authorizationHeader) {
-		Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+		long userId = tokenService.getIdFromAccessToken(authorizationHeader);
 		try {
 			List<Story> userStories = storyRepository.getStoryByUserId(userId);
 			JSONObject response = new JSONObject();

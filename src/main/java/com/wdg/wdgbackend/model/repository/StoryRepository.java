@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface StoryRepository {
 	void insertStory(Story story);
 
-	void likePlus(long storyId);
+	void incrementStoryLikeNum(long storyId);
 	void likeMinus(long storyId);
 	Optional<Long> getUserIdFromStory(long storyId);
 	String getContent(long storyId);
@@ -19,4 +19,5 @@ public interface StoryRepository {
 	Story getStory(long storyId);
 	List<Story> getStoryByUserId(long userId);
 	void deleteStory(long storyId);
+	void deleteStoryWithUserId(long userId);
 }

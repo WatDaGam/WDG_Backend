@@ -18,6 +18,8 @@ import java.util.List;
 @Service
 public class StoryListService {
 
+	private static final int LIMIT = 20;
+
 	private final StoryListRepository storyListRepository;
 
 	@Autowired
@@ -42,7 +44,7 @@ public class StoryListService {
 	private JSONObject getStories(JSONObject jsonBody) {
 		double lati = jsonBody.getDouble("lati");
 		double longi = jsonBody.getDouble("longi");
-		int LIMIT = 20;
+
 		List<Story> storyList = storyListRepository.getStoriesByDistance(lati, longi, LIMIT);
 		JSONObject response = new JSONObject();
 

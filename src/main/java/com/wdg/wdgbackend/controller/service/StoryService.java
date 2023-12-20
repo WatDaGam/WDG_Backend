@@ -5,7 +5,6 @@ import com.wdg.wdgbackend.controller.util.CustomException;
 import com.wdg.wdgbackend.model.entity.Story;
 import com.wdg.wdgbackend.model.repository.StoryRepository;
 import com.wdg.wdgbackend.model.repository.UserRepository;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +21,15 @@ public class StoryService {
 	private final UserRepository userRepository;
 	private final UserInfoService userInfoService;
 	private final TokenService tokenService;
-	private final StoryLikeCommonService storyLikeCommonService;
+	private final StoryUserLikeService likeService;
 
 	@Autowired
-	public StoryService(StoryRepository storyRepository, UserRepository userRepository, UserInfoService userInfoService, TokenService tokenService, StoryLikeCommonService storyLikeCommonService) {
+	public StoryService(StoryRepository storyRepository, UserRepository userRepository, UserInfoService userInfoService, TokenService tokenService, StoryUserLikeService likeService) {
 		this.storyRepository = storyRepository;
 		this.userRepository = userRepository;
 		this.userInfoService = userInfoService;
 		this.tokenService = tokenService;
-		this.storyLikeCommonService = storyLikeCommonService;
+		this.likeService = likeService;
 	}
 
 	@Transactional
@@ -79,8 +78,9 @@ public class StoryService {
 			long storyIdL = Long.parseLong(storyId);
 
 			userInfoService.decrementStoryNum(userId);
-			storyLikeCommonService.deleteStoryLikes(storyIdL);
+			likeService.deleteStoryLikes(storyIdL);
 			storyRepository.deleteStory(storyIdL);
+
 		} catch (DataAccessException e) {
 			log.error("story 삭제 중 데이터베이스 에러 발생", e);
 			throw new CustomException("Database error occurred while deleting a story", e, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -101,6 +101,7 @@ public class StoryService {
 
 			userRepository.lockUserStoryNum(userId);
 			userRepository.decrementStoryNum(userId);
+
 		} catch (DataAccessException e) {
 			log.error("story 삭제 중 데이터베이스 에러 발생", e);
 			throw new CustomException("Database error occurred while deleting a story", e, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -60,11 +60,8 @@ public class UserInfoService {
 		userRepository.decrementStoryNum(userId);
 	}
 
-	public void lockUserLikeNum(long writerId) throws DataAccessException {
-		userRepository.lockUserLikeNum(writerId);
-	}
-
 	public void incrementLikeNum(long writerId) throws DataAccessException {
+		userRepository.lockUserLikeNum(writerId);
 		userRepository.incrementLikeNum(writerId);
 	}
 }
