@@ -5,6 +5,8 @@ import com.wdg.wdgbackend.model.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
@@ -15,10 +17,10 @@ public class UserRepositoryImpl implements UserRepository {
 		this.userMapper = userMapper;
 	}
 
-	@Override
-	public boolean findSnsId(long snsId) {
-		return userMapper.checkSnsId(snsId) == 1;
-	}
+//	@Override
+//	public boolean findSnsId(long snsId) {
+//		return userMapper.checkSnsId(snsId) == 1;
+//	}
 
 	@Override
 	public boolean isNicknameDup(String nickname) {
@@ -26,7 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public boolean isNicknameNull(long snsId) {
+	public boolean isNicknameNull(String snsId) {
 		return userMapper.checkNicknameIsNull(snsId) == 0;
 	}
 
@@ -46,12 +48,12 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public User findUserById(long userId) {
+	public Optional<User> findUserById(long userId) {
 		return userMapper.findUserById(userId);
 	}
 
 	@Override
-	public User findUserBySnsId(long snsId) {
+	public Optional<User> findUserBySnsId(String snsId) {
 		return userMapper.findUserBySnsId(snsId);
 	}
 

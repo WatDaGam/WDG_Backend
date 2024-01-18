@@ -18,20 +18,26 @@ import java.util.List;
 @Service
 public class StoryListService {
 
-	private static final int LIMIT = 20;
+	private static final int INITIAL_LIMIT = 50;
+	private static final int FINAL_LIMIT = 20;
 
 	private final StoryListRepository storyListRepository;
+	private final TokenService tokenService;
 
 	@Autowired
-	public StoryListService(StoryListRepository storyListRepository) {
+	public StoryListService(StoryListRepository storyListRepository, TokenService tokenService) {
 		this.storyListRepository = storyListRepository;
+		this.tokenService = tokenService;
 	}
 
 	@Transactional
-	public JSONObject getNewListOfStory(String jsonData) {
+	public JSONObject getNewListOfStory(String authorizationHeader, String jsonData) {
 		try {
+			long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+			storyListRepository.increaseRenewNum(userId);
+
 			JSONObject jsonBody = new JSONObject(jsonData);
-			return getStories(jsonBody);
+			return getStories(userId, jsonBody);
 		} catch (JSONException e) {
 			log.error("JSON 파싱 오류", e);
 			throw new CustomException("Invalid JSON format", e, HttpStatus.BAD_REQUEST);
@@ -41,15 +47,15 @@ public class StoryListService {
 		}
 	}
 
-	private JSONObject getStories(JSONObject jsonBody) {
+	private JSONObject getStories(long userId, JSONObject jsonBody) {
 		double lati = jsonBody.getDouble("lati");
 		double longi = jsonBody.getDouble("longi");
 
-		List<Story> storyList = storyListRepository.getStoriesByDistance(lati, longi, LIMIT);
+		List<Story> storyList = storyListRepository.getStoriesByDistance(userId, lati, longi, INITIAL_LIMIT, FINAL_LIMIT);
 		JSONObject response = new JSONObject();
 
 		response.put("stories", new JSONArray(storyList));
-		System.out.println("response = " + response);
+
 		return response;
 	}
 }

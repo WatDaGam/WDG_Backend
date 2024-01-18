@@ -5,16 +5,17 @@ import java.util.List;
 public class User {
 
 	private long id;
-	private long snsId;
+	private String snsId;
 	private int platform;
 	private String nickname;
 	private long createdAt;
 	private int storyNum;
 	private int likeNum;
 	private int reportedStoryNum;
+	private int renewNum;
 	private boolean isActive;
 
-	public User(long id, long snsId, int platform, long createdAt) {
+	public User(long id, String snsId, int platform, long createdAt) {
 		this.id = id;
 		this.snsId = snsId;
 		this.platform = platform;
@@ -61,11 +62,11 @@ public class User {
 		this.id = id;
 	}
 
-	public long getSnsId() {
+	public String getSnsId() {
 		return snsId;
 	}
 
-	public void setSnsId(long snsId) {
+	public void setSnsId(String snsId) {
 		this.snsId = snsId;
 	}
 
@@ -91,5 +92,13 @@ public class User {
 
 	public void setReportedStoryNum(int reportedStoryNum) {
 		this.reportedStoryNum = reportedStoryNum;
+	}
+
+	public int getRenewNum() {
+		return renewNum;
+	}
+
+	public void setRenewNum(int renewNum) {
+		this.renewNum = renewNum;
 	}
 }

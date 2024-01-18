@@ -19,7 +19,12 @@ public class StoryListRepositoryImpl implements StoryListRepository {
 	}
 
 	@Override
-	public List<Story> getStoriesByDistance(double lati, double longi, int limit) {
-		return storyListMapper.selectNearestStories(lati, longi, limit);
+	public List<Story> getStoriesByDistance(long userId, double lati, double longi, int initialLimit, int finalLimit) {
+		return storyListMapper.selectNearestStories(userId, lati, longi, initialLimit, finalLimit);
+	}
+
+	@Override
+	public void increaseRenewNum(long userId) {
+		storyListMapper.incrementStoryNum(userId);
 	}
 }

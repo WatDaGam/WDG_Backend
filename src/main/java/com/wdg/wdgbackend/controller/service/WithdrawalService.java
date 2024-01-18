@@ -1,6 +1,7 @@
 package com.wdg.wdgbackend.controller.service;
 
 import com.wdg.wdgbackend.controller.util.CustomException;
+import com.wdg.wdgbackend.model.repository.BlockRepository;
 import com.wdg.wdgbackend.model.repository.ReportRepository;
 import com.wdg.wdgbackend.model.repository.StoryRepository;
 import com.wdg.wdgbackend.model.repository.UserRepository;
@@ -18,13 +19,15 @@ public class WithdrawalService {
 	private final ReportRepository reportRepository;
 	private final StoryUserLikeService storyUserLikeService;
 	private final StoryRepository storyRepository;
+	private final BlockRepository blockRepository;
 
 	@Autowired
-	public WithdrawalService(UserRepository userRepository, ReportRepository reportRepository, StoryUserLikeService storyUserLikeService, StoryRepository storyRepository) {
+	public WithdrawalService(UserRepository userRepository, ReportRepository reportRepository, StoryUserLikeService storyUserLikeService, StoryRepository storyRepository, BlockRepository blockRepository) {
 		this.userRepository = userRepository;
 		this.reportRepository = reportRepository;
 		this.storyUserLikeService = storyUserLikeService;
 		this.storyRepository = storyRepository;
+		this.blockRepository = blockRepository;
 	}
 
 	/**
@@ -33,6 +36,7 @@ public class WithdrawalService {
 	 */
 	public void deleteUser(Long userId) {
 		try {
+			blockRepository.getBlockedUsers(userId);
 			storyUserLikeService.deleteUserLikes(userId);
 			reportRepository.deleteUserReports(userId);
 			storyRepository.deleteStoryWithUserId(userId);

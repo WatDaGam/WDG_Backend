@@ -3,16 +3,18 @@ package com.wdg.wdgbackend.model.repository;
 import com.wdg.wdgbackend.model.entity.SNSPlatform;
 import com.wdg.wdgbackend.model.entity.User;
 
+import java.util.Optional;
+
 public interface UserRepository {
-	boolean findSnsId(long snsId);
+//	boolean findSnsId(String snsId);
 	boolean isNicknameDup(String nickname);
-	boolean isNicknameNull(long snsId);
+	boolean isNicknameNull(String snsId);
 	boolean isNicknameNullWithId(long userId);
 	boolean isUserExists(long userId);
 	void insertUser(User user);
 
-	User findUserById(long userId);
-	User findUserBySnsId(long snsId);
+	Optional<User> findUserById(long userId);
+	Optional<User> findUserBySnsId(String snsId);
 
 	void incrementStoryNum(long userId);
 	void decrementStoryNum(long userId);

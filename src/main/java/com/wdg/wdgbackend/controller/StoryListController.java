@@ -3,7 +3,6 @@ package com.wdg.wdgbackend.controller;
 import com.wdg.wdgbackend.controller.service.StoryListService;
 import com.wdg.wdgbackend.controller.util.CustomException;
 import com.wdg.wdgbackend.controller.util.MyJSON;
-import com.wdg.wdgbackend.model.entity.Story;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -13,10 +12,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/storyList")
@@ -78,12 +74,16 @@ public class StoryListController {
 					)
 			}
 	)
-	public ResponseEntity<String> renew(@RequestBody String jsonData) {
+	public ResponseEntity<String> renew(@RequestHeader("Authorization") String authorizationHeader, @RequestBody String jsonData) {
+		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+			return new ResponseEntity<>(MyJSON.message("Invalid Authorization Header"), HttpStatus.BAD_REQUEST);
+		}
+
 		if (jsonData == null || jsonData.trim().isEmpty()) {
 			return new ResponseEntity<>(MyJSON.message("Invalid nickname"), HttpStatus.BAD_REQUEST);
 		}
 		try {
-			JSONObject newListOfStory = storyListService.getNewListOfStory(jsonData);
+			JSONObject newListOfStory = storyListService.getNewListOfStory(authorizationHeader, jsonData);
 			return new ResponseEntity<>(newListOfStory.toString(), HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(MyJSON.message(e.getMessage()), e.getStatus());

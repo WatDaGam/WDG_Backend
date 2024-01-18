@@ -1,11 +1,12 @@
 package com.wdg.wdgbackend.controller;
 
-import com.wdg.wdgbackend.controller.service.LoginService;
+import com.wdg.wdgbackend.controller.service.LoginKakaoService;
 import com.wdg.wdgbackend.controller.service.NicknameService;
 import com.wdg.wdgbackend.controller.service.TokenService;
 import com.wdg.wdgbackend.controller.util.CustomException;
 import com.wdg.wdgbackend.controller.util.MyJSON;
 
+import com.wdg.wdgbackend.model.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -19,17 +20,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Slf4j
 @RestController
 @RequestMapping("/nickname")
 public class NicknameController {
 
 	private final NicknameService nicknameService;
-	private final LoginService loginService;
+	private final LoginKakaoService loginService;
 	private final TokenService tokenService;
 
 	@Autowired
-	public NicknameController(NicknameService nicknameService, LoginService loginService, TokenService tokenService) {
+	public NicknameController(NicknameService nicknameService, LoginKakaoService loginService, TokenService tokenService) {
 		this.nicknameService = nicknameService;
 		this.loginService = loginService;
 		this.tokenService = tokenService;
@@ -87,7 +90,7 @@ public class NicknameController {
 
 		try {
 			if (nicknameService.isNicknameDuplicated(nickname)) {
-				return new ResponseEntity<>(MyJSON.message("nickname duplicated"), HttpStatus.OK);
+				return new ResponseEntity<>(MyJSON.message("nickname duplicated"), HttpStatus.CONFLICT);
 			}
 			return new ResponseEntity<>(MyJSON.message("nickname not duplicated"), HttpStatus.OK);
 		} catch (DataAccessException e) {
@@ -148,14 +151,21 @@ public class NicknameController {
 		}
 
 		try {
-			Long userId = tokenService.getIdFromAccessToken(authorizationHeader);
-			Long snsId = tokenService.getSnsIdFromAccessToken(authorizationHeader);
+			long userId = tokenService.getIdFromAccessToken(authorizationHeader);
+			String snsId = tokenService.getSnsIdFromAccessToken(authorizationHeader);
+			Optional<User> userFromDB = loginService.getUserFromDB(snsId);
 
-			if (nicknameService.isNicknameDuplicated(nickname)) {
-				return new ResponseEntity<>(MyJSON.message("nickname duplicated"), HttpStatus.OK);
-			}
+			if (userFromDB.isEmpty())
+				return new ResponseEntity<>(MyJSON.message("Invalid user"), HttpStatus.BAD_REQUEST);
+
+			if (nicknameService.isNicknameDuplicated(nickname))
+				return new ResponseEntity<>(MyJSON.message("nickname duplicated"), HttpStatus.CONFLICT);
+
 			nicknameService.setNickname(userId, nickname);
-			HttpHeaders responseHeaders = loginService.getHttpHeaders(snsId);
+			userFromDB = loginService.getUserFromDB(snsId);
+			if (userFromDB.isEmpty())
+				return new ResponseEntity<>(MyJSON.message("Invalid user"), HttpStatus.BAD_REQUEST);
+			HttpHeaders responseHeaders = loginService.getHttpHeaders(userFromDB.get());
 			return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(MyJSON.message(e.getMessage()), e.getStatus());

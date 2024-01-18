@@ -1,9 +1,13 @@
 package com.wdg.wdgbackend.controller;
 
+import com.wdg.wdgbackend.controller.service.LoginAppleService;
+import com.wdg.wdgbackend.controller.service.LoginGoogleService;
+import com.wdg.wdgbackend.controller.service.LoginKakaoService;
 import com.wdg.wdgbackend.controller.service.LoginService;
 import com.wdg.wdgbackend.controller.util.CustomException;
 import com.wdg.wdgbackend.controller.util.MyJSON;
 import com.wdg.wdgbackend.model.entity.SNSPlatform;
+import com.wdg.wdgbackend.model.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -21,11 +25,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/login")
 public class LoginController {
 
-	private final LoginService loginService;
+	private final LoginKakaoService loginKakaoService;
+	private final LoginGoogleService loginGoogleService;
+	private final LoginAppleService loginAppleRealService;
 
 	@Autowired
-	public LoginController(LoginService loginService) {
-		this.loginService = loginService;
+	public LoginController(LoginKakaoService loginKakaoService, LoginGoogleService loginGoogleService, LoginAppleService loginAppleRealService) {
+		this.loginKakaoService = loginKakaoService;
+		this.loginGoogleService = loginGoogleService;
+		this.loginAppleRealService = loginAppleRealService;
 	}
 
 	@GetMapping
@@ -80,7 +88,6 @@ public class LoginController {
 			}
 	)
 	public ResponseEntity<String> login(@RequestHeader("Authorization") String authorizationHeader, @RequestParam("platform") SNSPlatform platform) {
-		long snsId = 0;
 		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 			return new ResponseEntity<>(MyJSON.message("Invalid Authorization Header"), HttpStatus.BAD_REQUEST);
 		}
@@ -88,13 +95,19 @@ public class LoginController {
 			return new ResponseEntity<>(MyJSON.message("Invalid platform"), HttpStatus.BAD_REQUEST);
 		}
 
-		String accessToken = authorizationHeader.replace("Bearer ", "");
+		LoginService loginService;
+		if (platform == SNSPlatform.KAKAO) loginService = loginKakaoService;
+		else if (platform == SNSPlatform.GOOGLE) {
+			loginService = loginGoogleService;
+		} else {
+			loginService = loginAppleRealService;
+		}
 
 		try {
-			if (platform.equals(SNSPlatform.KAKAO)) snsId = loginService.getIdFromKakao(accessToken);
-			if (!loginService.snsExists(snsId)) loginService.insertUser(snsId);
-			HttpHeaders responseHeaders = loginService.getHttpHeaders(snsId);
-			if (loginService.alreadySignedIn(snsId)) return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
+			User loginUser = loginService.loginWithAuthHeader(authorizationHeader);
+			HttpHeaders responseHeaders = loginService.getHttpHeaders(loginUser);
+
+			if (loginService.alreadySignedIn(loginUser)) return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
 			return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(MyJSON.message(e.getMessage()), e.getStatus());
