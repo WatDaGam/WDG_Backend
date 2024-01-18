@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface StoryListRepository {
 
-	List<Story> getStoriesByDistance(double lati, double longi, int limit);
+	List<Story> getStoriesByDistance(long userId, double lati, double longi, int initialLimit, int finalLimit);
+	void increaseRenewNum(long userId);
 }

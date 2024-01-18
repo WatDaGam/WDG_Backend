@@ -3,11 +3,14 @@ package com.wdg.wdgbackend.model.mapper;
 import com.wdg.wdgbackend.model.entity.User;
 import org.apache.ibatis.annotations.*;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @Mapper
 public interface UserMapper {
 
-	@Select("SELECT COUNT(*) FROM user WHERE snsId = #{snsId}")
-	int checkSnsId(long snsId);
+//	@Select("SELECT COUNT(*) FROM user WHERE snsId = #{snsId}")
+//	int checkSnsId(String snsId);
 
 	@Select("SELECT COUNT(*) FROM user WHERE nickname = #{nickname}")
 	int checkNicknameDup(String nickname);
@@ -16,7 +19,7 @@ public interface UserMapper {
 	int isUserExists(long userId);
 
 	@Select("SELECT CASE WHEN nickname IS NULL THEN 0 ELSE 1 END FROM user WHERE snsId = #{snsId}")
-	int checkNicknameIsNull(long snsId);
+	int checkNicknameIsNull(String snsId);
 
 	@Select("SELECT CASE WHEN nickname IS NULL THEN 0 ELSE 1 END FROM user WHERE id = #{userId}")
 	int checkNicknameIsNullWithId(long userId);
@@ -27,10 +30,10 @@ public interface UserMapper {
 	void insert(User user);
 
 	@Select("SELECT * FROM user WHERE id = #{userId}")
-	User findUserById(long userId);
+	Optional<User> findUserById(long userId);
 
 	@Select("SELECT * FROM user WHERE snsId = #{snsId}")
-	User findUserBySnsId(long snsId);
+	Optional<User> findUserBySnsId(String snsId);
 
 	@Update("UPDATE user SET nickname = #{nickname} WHERE id = #{userId}")
 	void updateNicknameById(long userId, String nickname);

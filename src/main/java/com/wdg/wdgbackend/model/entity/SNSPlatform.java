@@ -2,8 +2,8 @@ package com.wdg.wdgbackend.model.entity;
 
 public enum SNSPlatform {
 	KAKAO,
-	NAVER,
-	GOOGLE;
+	GOOGLE,
+	APPLE;
 
     public boolean isValid() {
 		return true;

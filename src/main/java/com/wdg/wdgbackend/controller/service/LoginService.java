@@ -1,7 +1,6 @@
 package com.wdg.wdgbackend.controller.service;
 
 import com.wdg.wdgbackend.controller.util.CustomException;
-import com.wdg.wdgbackend.model.entity.SNSPlatform;
 import com.wdg.wdgbackend.model.entity.User;
 import com.wdg.wdgbackend.model.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +18,19 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
-public class LoginService {
+public abstract class LoginService {
 
-	private final UserRepository userRepository;
-	private final TokenService tokenService;
+	protected static final String KAKAO_API_SERVER = "https://kapi.kakao.com/v2/user/me";
+//	protected static final String GOOGLE_API_SERVER = "https://www.googleapis.com/oauth2/v3/userinfo";
+	protected static final String GOOGLE_API_SERVER = "https://oauth2.googleapis.com/token";
+	protected static final String APPLE_AUTH_URL = "https://appleid.apple.com";
+
+	protected final UserRepository userRepository;
+	protected final TokenService tokenService;
 
 	@Autowired
 	public LoginService(UserRepository userRepository, TokenService tokenService) {
@@ -32,24 +38,17 @@ public class LoginService {
 		this.tokenService = tokenService;
 	}
 
-	private HttpEntity<String> makeHttpEntity(String accessToken) {
+	protected HttpEntity<String> makeHttpEntity(String accessToken) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.set("Authorization", "Bearer " + accessToken);
 		return new HttpEntity<>("parameters", httpHeaders);
 	}
 
-	private long getKakaoIdNum(HttpEntity<String> httpResponse) throws JSONException {
-		JSONObject jsonKakaoAccount = new JSONObject(httpResponse.getBody());
-		return jsonKakaoAccount.getLong("id");
-	}
-
-	public long getIdFromKakao(String accessToken) {
-		HttpEntity<String> httpEntityToKakao = makeHttpEntity(accessToken);
-		String kakaoApiUrl = "https://kapi.kakao.com/v2/user/me";
+	protected String getIdFromAPIServer(HttpEntity<String> httpEntity, String APIServer) {
 
 		try {
-			HttpEntity<String> httpResponse = new RestTemplate().exchange(kakaoApiUrl, HttpMethod.GET, httpEntityToKakao, String.class);
-			return getKakaoIdNum(httpResponse);
+			HttpEntity<String> httpResponse = new RestTemplate().exchange(APIServer, HttpMethod.GET, httpEntity, String.class);
+			return getIdFromToken(httpResponse);
 		} catch (HttpClientErrorException | HttpServerErrorException | ResourceAccessException e) {
 			log.error("Kakao API 에러", e);
 			throw new CustomException("Error occurred while using Kakao API", e, HttpStatus.BAD_REQUEST);
@@ -59,36 +58,40 @@ public class LoginService {
 		}
 	}
 
-	public boolean snsExists(long snsId) throws DataAccessException {
-		return userRepository.findSnsId(snsId);
+	protected String getIdFromToken(HttpEntity<String> httpResponse) throws JSONException {
+		JSONObject jsonAccount = new JSONObject(httpResponse.getBody());
+		return String.valueOf(jsonAccount.getLong("id"));
 	}
 
-	public boolean alreadySignedIn(long snsId) throws DataAccessException {
-		return userRepository.findSnsId(snsId) && !userRepository.isNicknameNull(snsId);
+	public Optional<User> getUserFromDB(String snsId) {
+		Optional<User> userFromDB = userRepository.findUserBySnsId(snsId);
+		if (userFromDB.isEmpty()) {
+			insertUser(snsId);
+			userFromDB = userRepository.findUserBySnsId(snsId);
+		}
+		return userFromDB;
 	}
 
-	public void insertUser(long snsId) throws DataAccessException {
-		userRepository.insertUser(new User(0L, snsId, SNSPlatform.KAKAO.ordinal(), System.currentTimeMillis()));
-	}
-
-	public HttpHeaders getHttpHeaders(long snsId) throws DataAccessException {
-		User requestUser = findUserBySnsId(snsId);
+	public HttpHeaders getHttpHeaders(User userFromDB) {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
-		// 1주일
 		long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 60 * 24 * 7; // 1주일
 		long accessExpirationTime = System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY;
-		// 1달
 		long REFRESH_TOKEN_EXPIRY = ACCESS_TOKEN_EXPIRY * 4; // 1달
 		long refreshExpirationTime = System.currentTimeMillis() + REFRESH_TOKEN_EXPIRY;
-		responseHeaders.add("Authorization", "Bearer " + tokenService.generateAccessToken(requestUser, accessExpirationTime));
-		responseHeaders.add("Refresh-Token", tokenService.generateRefreshToken(requestUser, refreshExpirationTime));
+
+		responseHeaders.add("Authorization", "Bearer " + tokenService.generateAccessToken(userFromDB, accessExpirationTime));
+		responseHeaders.add("Refresh-Token", tokenService.generateRefreshToken(userFromDB, refreshExpirationTime));
 		responseHeaders.add("Access-Expiration-Time", String.valueOf(accessExpirationTime));
 		responseHeaders.add("Refresh-Expiration-Time", String.valueOf(refreshExpirationTime));
 		return responseHeaders;
 	}
 
-	private User findUserBySnsId(long snsId) throws DataAccessException {
-		return userRepository.findUserBySnsId(snsId);
+	public boolean alreadySignedIn(User user) throws DataAccessException {
+		return !userRepository.isNicknameNull(user.getSnsId());
 	}
+
+	public abstract User loginWithAuthHeader(String authorizationHeader);
+
+	protected abstract void insertUser(String snsId);
 }

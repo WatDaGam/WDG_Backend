@@ -53,9 +53,13 @@ public class LikeService {
 		Optional<Long> writerId = storyUserLikeService.getUserIdFromStory(storyId);
 		if (writerId.isEmpty() || storyUserLikeService.isLiked(userId, storyId)) return;
 
-		userInfoService.incrementLikeNum(writerId.get());
-		likeRepository.linkUserAndStory(userId, storyId, writerId.get());
-		storyUserLikeService.lockAndIncreaseLikeNum(storyId);
+		try {
+			userInfoService.incrementLikeNum(writerId.get());
+			likeRepository.linkUserAndStory(userId, storyId, writerId.get());
+			storyUserLikeService.lockAndIncreaseLikeNum(storyId);
+		} catch (DataAccessException e) {
+			throw new CustomException("Database access error: " + e.getMessage(), e, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	public JSONObject getStoryLikeNumJSON(String storyId) {

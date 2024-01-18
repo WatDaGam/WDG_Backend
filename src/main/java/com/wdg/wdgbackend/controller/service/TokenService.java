@@ -27,7 +27,6 @@ import java.util.Optional;
 @Service
 public class TokenService {
 
-	private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
 	private final UserRepository userRepository;
 	@Value("${jwt.secret-key}")
 	private String secretKeyProperty;
@@ -44,7 +43,6 @@ public class TokenService {
 	}
 
 	public String generateAccessToken(User user, long expirationTime) {
-
 		return Jwts.builder()
 				.claim("id", user.getId())
 				.claim("snsId", user.getSnsId())
@@ -76,8 +74,8 @@ public class TokenService {
 		return getClaims(authorizationHeader).get("nickname").toString();
 	}
 
-	public long getSnsIdFromAccessToken(String authorizationHeader) throws CustomException {
-		return Long.parseLong(getClaims(authorizationHeader).get("snsId").toString());
+	public String getSnsIdFromAccessToken(String authorizationHeader) throws CustomException {
+		return getClaims(authorizationHeader).get("snsId").toString();
 	}
 
 	private static Claims getClaims(String authorizationHeader) {
@@ -99,8 +97,9 @@ public class TokenService {
 
 			if (expiration.before(new Date())) return Optional.empty();
 
-			long snsId = claims.get("snsId", Long.class);
-			return Optional.ofNullable(userRepository.findUserBySnsId(snsId));
+			String snsId = claims.get("snsId", String.class);
+
+			return userRepository.findUserBySnsId(snsId);
 		} catch (JwtException e) {
 			log.error("토큰 검증 과정 중 JWT 에러 발생", e);
 			return Optional.empty();

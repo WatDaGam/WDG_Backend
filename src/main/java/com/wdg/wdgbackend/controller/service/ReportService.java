@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class ReportService {
 
-	private static final int MAX_REPORT = 2;
+	private static final int MAX_REPORT = 10;
 
 	private final ReportRepository reportRepository;
 	private final LikeRepository likeRepository;

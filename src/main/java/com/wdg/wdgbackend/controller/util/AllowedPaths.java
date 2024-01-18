@@ -17,6 +17,9 @@ public enum AllowedPaths {
 	LIST_RENEW("/storyList/renew"),
 	REFRESH_TOKEN("/refreshtoken"),
 	USER_INFO("/userInfo"),
+	BLOCK("/block"),
+	BLOCK_REMOVE("/block/remove"),
+	BLOCK_LIST("/block/list"),
 	WITHDRAWAL("/withdrawal");
 
 	private final String path;
